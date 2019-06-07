@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wrapped</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <style> /* set the CSS */
+
+    .line {
+        fill: none;
+        /*stroke: steelblue;*/
+        /*stroke-width: 100;*/
+        stroke-linejoin: round;
+        /*stroke-width: 10px;*/
+    }
+    .overlay {
+        fill: none;
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    html, body{
+        width:100%;
+        height:100%
+    }
+
+    *{
+        font-family: sans-serif;
+        box-sizing: border-box;
+    }
+
+    #main{
+        /*background-color: #F8F8F8;*/
+        height: 100%;
+        margin:0;
+        /*padding:50px;*/
+    }
+
+    #chart{
+        margin: 0 auto;
+    }
+
+
+    .navbar{
+        height:5%;
+        width: 100%;
+    }
+    #chart{
+        height:50%;
+        width: 100%;
+
+    }
+    #questions{
+        height:45%;
+        width: 100%;
+
+        overflow: scroll;
+    }
+    .questions{
+        padding-top:20px;
+        width: 50%;
+        margin: 0 auto;
+    }
+    #title{
+        text-align: center;
+        font-size:3em;
+    }
+        button.btn{
+            margin-top: 5px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="wrappedBarChart.js"></script>
+</head>
+<body>
+
+<div class="container" style="width:100%; margin: 0 auto" id="main">
+<h1>Instructions</h1>
+<p>
+In this study, we will show you two types of bar chart and ask you to answer specific questions about it. <br>
+The first type, is a normal bar chart, one with every bar corresponding to a data point about a category. The highest the bar, the higher the value. <br>
+<img src="normal.JPG"  width="100%">
+The second type, is a modified version. We call it a wrapped bar chart. The way wrapped bar chart works is that bars taller than a certain threshold will wrap around themselves. <br>
+for example, a bar havin a value of 5000 will wrap 5 if the threshold is a 1000. The image below shows how it works.
+<img src="wrapped.JPG" width="100%">
+<br>
+<br>
+in this study, we will ask you to use these two types of bar chart to answer questions about two datasets. <br>
+The questions we ask are of two types: <br>
+To find specific bars, such as the one with the highest value, the lowest value, or the second highest <br>
+And to compare two bars in terms of porportions. For example, we will ask you how many times is the value of the tallest bar to the shortest bar. <br>
+For example, if a bar has a value of 5000 and another has a value of 500, the taller bar is 10 times the value of the shorter bar. <br>
+We are asking you to estimate, so please do your best. <br>
+When you are ready, please click continue. The study will take you through two bar charts! <br>
+</p>
+
+<button type="submit" class="btn btn-primary" id="continue">Continue</button>
+
+
+</div>
+<script>
+        $("#continue").click(function(event){
+            event.preventDefault();
+            window.location.assign("/study");
+        })
+
+
+</script>
+
+</body>
+</html>

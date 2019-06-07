@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wrapped</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <style> /* set the CSS */
+
+    .line {
+        fill: none;
+        /*stroke: steelblue;*/
+        /*stroke-width: 100;*/
+        stroke-linejoin: round;
+        /*stroke-width: 10px;*/
+    }
+    .overlay {
+        fill: none;
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    html, body{
+        width:100%;
+        height:100%
+    }
+
+    *{
+        font-family: sans-serif;
+        box-sizing: border-box;
+    }
+
+    #main{
+        /*background-color: #F8F8F8;*/
+        height: 100%;
+        margin:0;
+        /*padding:50px;*/
+    }
+
+    #chart{
+        margin: 0 auto;
+    }
+
+
+    .navbar{
+        height:5%;
+        width: 100%;
+    }
+    #chart{
+        height:50%;
+        width: 100%;
+
+    }
+    #questions{
+        height:45%;
+        width: 100%;
+
+        overflow: scroll;
+    }
+    .questions{
+        padding-top:20px;
+        width: 50%;
+        margin: 0 auto;
+    }
+    #title{
+        text-align: center;
+        font-size:3em;
+    }
+        button.btn{
+            margin-top: 5px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="wrappedBarChart.js"></script>
+</head>
+<body>
+
+<div class="container" style="width:100%; margin: 0 auto" id="main">
+<h1>Consent to Participate in a Research Study</h1>
+                <ul>
+                <li>You are invited to participate in a research study.  Participation in this research study is voluntary.  The information provided is to give you key information to help you decide whether or not to participate.</li>
+                <li>The purpose of this study is to understand how useful a modified version of bar charts called wrapped bar charts visualizations are in helping users understand numerical data</li>
+                <li>During the study, you will be asked to look at a number of bar charts (both wrapped and normal). We will ask you to compare the proportions of different bars in the data, as well as to find specific bars in a bar chart such as the second shortest bar.</li>
+                <li>
+    You must be age 18 or older to participate in this study.  <br>
+	It will take you about 15 minutes to complete the study.  <br>
+	We do not believe that you will experience any risk from participating in this study.  <br>
+	You will not benefit personally by participating in this study.  What we learn about how people are motivated may be beneficial to others.  
+
+                </li>
+
+                <li>
+                Your privacy will be protected and confidentiality will be maintained to the extent possible. Your responses will be treated as confidential. Your MTurk IDs will not be stored in our databases and we will only use your MTurk IDs to provide compensation. The responses will be stored separately in secure computers and access will be only given to the conductors of the study who have approval to access. We might use the survey data for future research studies, and we might share the non-identifiable survey data with other researchers for future research studies without additional consent from you. 
+Participation is voluntary.  You may choose not to take part in the study.  You may start participating and change your mind and stop participation at any time. 
+The faculty advisor on this study is Dr. Wenwen dou, she can be reached at WDou1@uncc.edu. If you have questions concerning the study, contact the principal investigator, Alireza Karduni by email at akarduni@uncc.edu.  If you have further questions or concerns about your rights as a participant in this study, contact the Office of Research Compliance at (704) 687-1871 or uncc-irb@uncc.edu.   
+At the end of the study, you will receive a unique token (a text containing random numbers and characters). We ask that you enter that unique token in the provided Amazon MTurk box).<br> Your compensation is contingent upon successful entry of the unique token.
+You may print a copy of this form.  If you are 18 years of age or older, have read and understand the information provided  and freely consent to participate in the study, you may proceed to the survey 
+                </li>
+                <li style="color:red">WARNING: DO NOT close your browser or hit the back button during the study until you receive your token after completion of the study. Otherwise your progress will be lost.</li>
+                    <!--<li style="color:red">WARNING: DO NOT close your browser or hit the back button during the study until you receive your token after completion of the study and submission to MTurk. Otherwise your progress will be lost and you may not receive your rewards.</li>-->
+                </ul>
+                <button type="submit" class="btn btn-primary" id="consent">Give consent</button>
+
+
+    </div>
+<script>
+        $("#consent").click(function(event){
+            event.preventDefault();
+            $.get("/api/consent", function(data, status){
+                console.log(data);
+                window.location.assign("/instructions");
+            });
+        })
+
+
+</script>
+
+</body>
+</html>

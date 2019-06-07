@@ -1,0 +1,25 @@
+{
+  "name": "emotional-accumulation",
+  "version": "1.0.0",
+  "description": "user study markant lab",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "csv": "^5.1.1",
+    "csv-parser": "^2.2.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mathjs": "^5.9.0",
+    "mongoose": "^5.4.17",
+    "randomstring": "^1.1.5"
+  }
+}

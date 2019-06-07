@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wrapped</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <style> /* set the CSS */
+
+    .line {
+        fill: none;
+        /*stroke: steelblue;*/
+        /*stroke-width: 100;*/
+        stroke-linejoin: round;
+        /*stroke-width: 10px;*/
+    }
+    .overlay {
+        fill: none;
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    html, body{
+        width:100%;
+        height:100%
+    }
+
+    *{
+        font-family: sans-serif;
+        box-sizing: border-box;
+    }
+
+    #main{
+        /*background-color: #F8F8F8;*/
+        height: 100%;
+        margin:0;
+        /*padding:50px;*/
+    }
+
+    #chart{
+        margin: 0 auto;
+    }
+
+
+    .navbar{
+        height:5%;
+        width: 100%;
+    }
+    #chart{
+        height:50%;
+        width: 100%;
+
+    }
+    #questions{
+        height:45%;
+        width: 100%;
+
+        overflow: scroll;
+    }
+    .questions{
+        padding-top:20px;
+        width: 50%;
+        margin: 0 auto;
+    }
+    #title{
+        text-align: center;
+        font-size:3em;
+    }
+        button.btn{
+            margin-top: 5px;
+        }
+
+
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="wrappedBarChart.js"></script>
+</head>
+<body>
+
+<div class="container-fluid" style="width:100%; margin: 0 auto" id="main">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">User Study</a>
+            <h4 class="navbar-nav ml-auto" style="color:white" id="barChartTitle">
+                Bar chart title
+            </h4>
+    </nav>
+    <div id="chart"></div>
+    <div id="questions">
+
+        <form class="questions">
+            <h3>Please answer the following questions</h3>
+            <fieldset class="form-group" id="highestForm"  >
+                    <label for="highest" >Identify the bar with the highest value (click on a bar in the chart).</label>
+                    <input type="text" class="form-control" id="highest" name="highest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
+                <button type="submit" class="btn btn-primary" id="highestSubmit">Submit</button>
+            </fieldset>
+            <fieldset class="form-group" id="lowestForm"  style="display: none">
+                <label for="lowest" >Identify the bar with the lowest value (click on a bar in the chart).</label>
+                <input type="text" class="form-control" id="lowest" name="lowest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
+                <button type="submit" class="btn btn-primary" id="lowestSubmit">Submit</button>
+            </fieldset>
+            <fieldset class="form-group" id="firstPercentageForm" style="display: none" >
+                <label for="firstPercentage" >How many times is the value of the highest bar to the lowest bar? (input a number in the text bar)</label>
+                <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Write down a percentage">
+                <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
+            </fieldset>
+            <fieldset class="form-group" id="secondHighestForm" style="display: none" >
+                <label for="secondHighest" >Identify the bar with the second highest value (click on a bar in the chart).</label>
+                <input type="text" class="form-control" id="secondHighest" name="secondHighest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
+                <button type="submit" class="btn btn-primary" id="secondHighestSubmit">Submit</button>
+            </fieldset>
+            <fieldset class="form-group" id="secondLowestForm"  style="display: none">
+                <label for="secondLowest" >Identify the bar with the second lowest value (click on a bar in the chart).</label>
+                <input type="text" class="form-control" id="secondLowest" name="secondLowest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
+                <button type="submit" class="btn btn-primary" id="secondLowestSubmit">Submit</button>
+            </fieldset>
+            <fieldset class="form-group" id="secondPercentageForm" style="display: none" >
+                <label for="secondPercentage" >How many times is the value of the second lowest bar to the lowest bar? (input a number in the text bar)</label>
+                <input type="number" class="form-control" min=1 id="secondPercentage" name="secondPercentage" aria-describedby="emailHelp" placeholder="Write down a percentage">
+                <button type="submit" class="btn btn-primary" id="secondPercentageSubmit">Submit</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div id="thresh">
+    <!--<p>Bar Chart Threshold</p>-->
+</div>
+<div id="wrap">
+    <!--<p>Wrap Threshold</p>-->
+</div>
+<script>
+
+    var data = {
+        "startTime" : Date.now(),
+        "firstBar":{"answers":[],"times":[]},
+        "secondBar":{"answers":[],"times":[]},
+        "endTime": null
+    };
+
+    var forms = [
+        "highest",
+        "lowest",
+        "firstPercentage",
+        "secondHighest",
+        "secondLowest",
+        "secondPercentage"
+    ];
+
+    var questions = [
+        "Identify the bar with the highest value",
+        "Identify the bar with the lowest value",
+        "what is percentage is the value of the lowest bar to the highest bar? (input a number)",
+        "identify the bar with the second highest value",
+        "identify the bar with the second lowest value",
+        "what percentage is the value of the lowest bar to the second lowest bar? (input a number)"
+    ];
+
+    var titles = ["Number of Facebook ads by presidential candidates",
+        "Number of resignation of the members of congress by decade"];
+
+    var currentIndex = 0;
+    var current = forms[currentIndex];
+    // normal bar first wrapped next is group 0
+    var group = 0;
+    var thresholds = [1,0.1];
+    var index = 0;
+
+    $.get("/api/userinfo",function(data){
+        var group = data.group;
+        if (+group === 0){
+            thresholds = [1,0.05];
+            
+        } else {
+            thresholds = [0.05,1]
+        }
+        Bar(index,0,thresholds[index]);
+    })
+
+
+    
+
+    function Bar(index,wrapThresh,threshold){
+
+        $("#barChartTitle").text(titles[index]);
+
+        currentIndex = 0;
+        current = forms[currentIndex];
+        var barChart = new wrappedBarChart(index,wrapThresh,threshold);
+
+        addClickListener();
+    }
+
+    function addClickListener(){
+        $("#"+current+"Submit").click(function(event){
+            event.preventDefault();
+            if (index===0){
+                data["firstBar"]["times"].push(Date.now());
+            } else {
+                data["secondBar"]["times"].push(Date.now());
+            }
+
+            if (currentIndex < forms.length-1) {
+                if ($('#'+current+"Submit").val() === ""){
+                    $('#'+current+"Submit").prop('disabled', true);
+                    currentIndex +=1;
+                    current = forms[currentIndex];
+                    console.log(current);
+                    console.log(currentIndex);
+                    $("#"+current+"Form").css("display","block");
+                    var questions    = $('#questions');
+                    var height = questions[0].scrollHeight;
+                    questions.scrollTop(height);
+
+                    addClickListener();
+                } else{
+                    alert("Please enter or select a value");
+                }
+
+
+
+            } else {
+
+                if (index ===0){
+                    forms.forEach(function(d){
+                        data["firstBar"]["answers"].push([d,$("#"+d).val()]);
+                    });
+
+                    console.log(data);
+
+                    forms.forEach(function(d,i){
+                        $("#"+d).val("");
+                        if (i >0){
+                            $("#"+d+"Form").css("display","none");
+                        }
+                    });
+
+                    $("#chart").empty();
+                    index = 1;
+                    $("button").prop("disabled",false);
+                    $("button").unbind();
+                    Bar(index,0,thresholds[index]);
+
+                } else {
+                    forms.forEach(function(d){
+                        data["secondBar"]["answers"].push([d,$("#"+d).val()]);
+                    });
+                    data["endTime"] = Date.now();
+                    data["group"] = group;
+                    console.log(data);
+                    $.post("/api/study",{data:data},success=function(result){
+                    console.log(result);
+                    window.location.assign("/debrief");
+                });
+
+                    alert("done!")
+                }
+
+
+
+            }
+
+        })
+    }
+
+</script>
+
+</body>
+</html>
