@@ -15,8 +15,6 @@ const url =
 mongoose.connect(url);
 mongoose.promise = global.Promise;
 
-// const db = mongoose.anchoring;
-
 function zip() {
   let args = [].slice.call(arguments);
   let shortest =
@@ -59,6 +57,7 @@ function getRandomInt(max) {
 const Response = mongoose.model("wrapBarChart", responseSchema);
 
 router.get("/api/userinfo", function(req, res) {
+  console.log(req.session.userid);
   if (req.session.userid) {
     res.json({
       group: req.session.group,
@@ -70,8 +69,7 @@ router.get("/api/userinfo", function(req, res) {
 });
 
 router.get("/api/consent", function(req, res) {
-  // 0 is low 1 is high 2 is control //
-  // for order 0 is basic anchoring first, then with map visualization and 1 is map visualization first and then basic anchoring//
+  // 0 is for normal first then wrapped, 1 is vice versa
 
   if (!req.session.userid) {
     let token = randomstring.generate(8);

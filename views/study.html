@@ -81,7 +81,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="wrappedBarChart.js"></script>
+    
 </head>
 <body>
 
@@ -109,7 +109,7 @@
             </fieldset>
             <fieldset class="form-group" id="firstPercentageForm" style="display: none" >
                 <label for="firstPercentage" >How many times is the value of the highest bar to the lowest bar? (input a number in the text bar)</label>
-                <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Write down a percentage">
+                <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="secondHighestForm" style="display: none" >
@@ -124,7 +124,7 @@
             </fieldset>
             <fieldset class="form-group" id="secondPercentageForm" style="display: none" >
                 <label for="secondPercentage" >How many times is the value of the second lowest bar to the lowest bar? (input a number in the text bar)</label>
-                <input type="number" class="form-control" min=1 id="secondPercentage" name="secondPercentage" aria-describedby="emailHelp" placeholder="Write down a percentage">
+                <input type="number" class="form-control" min=1 id="secondPercentage" name="secondPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="secondPercentageSubmit">Submit</button>
             </fieldset>
         </form>
@@ -138,10 +138,10 @@
 </div>
 <script>
 
-    var data = {
+    var user_data = {
         "startTime" : Date.now(),
-        "firstBar":{"answers":[],"times":[]},
-        "secondBar":{"answers":[],"times":[]},
+        "firstBar":{"answers":[],"times":[],"mousePositions":[]},
+        "secondBar":{"answers":[],"times":[],"mousePositions":[]},
         "endTime": null
     };
 
@@ -163,8 +163,8 @@
         "what percentage is the value of the lowest bar to the second lowest bar? (input a number)"
     ];
 
-    var titles = ["Number of Facebook ads by presidential candidates",
-        "Number of resignation of the members of congress by decade"];
+    var titles = ["Number of Facebook ads by US presidential candidates for the 2020 election",
+        "Number of resignation of the members of the US Congress by decade"];
 
     var currentIndex = 0;
     var current = forms[currentIndex];
@@ -202,14 +202,14 @@
         $("#"+current+"Submit").click(function(event){
             event.preventDefault();
             if (index===0){
-                data["firstBar"]["times"].push(Date.now());
+                user_data["firstBar"]["times"].push(Date.now());
             } else {
-                data["secondBar"]["times"].push(Date.now());
+                user_data["secondBar"]["times"].push(Date.now());
             }
 
             if (currentIndex < forms.length-1) {
-                if ($('#'+current+"Submit").val() === ""){
-                    $('#'+current+"Submit").prop('disabled', true);
+                if ($('#'+current).val() !== ""){
+                    $('#'+current+"Submit").prop('disabled', true).attr('class',"btn btn-default").text("Done!");
                     currentIndex +=1;
                     current = forms[currentIndex];
                     console.log(current);
@@ -230,10 +230,10 @@
 
                 if (index ===0){
                     forms.forEach(function(d){
-                        data["firstBar"]["answers"].push([d,$("#"+d).val()]);
+                        user_data["firstBar"]["answers"].push([d,$("#"+d).val()]);
                     });
 
-                    console.log(data);
+                    console.log(user_data);
 
                     forms.forEach(function(d,i){
                         $("#"+d).val("");
@@ -244,18 +244,16 @@
 
                     $("#chart").empty();
                     index = 1;
-                    $("button").prop("disabled",false);
+                    $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
                     $("button").unbind();
                     Bar(index,0,thresholds[index]);
 
                 } else {
                     forms.forEach(function(d){
-                        data["secondBar"]["answers"].push([d,$("#"+d).val()]);
+                        user_data["secondBar"]["answers"].push([d,$("#"+d).val()]);
                     });
-                    data["endTime"] = Date.now();
-                    data["group"] = group;
-                    console.log(data);
-                    $.post("/api/study",{data:data},success=function(result){
+                    user_data["endTime"] = Date.now();
+                    $.post("/api/study",{data:user_data},success=function(result){
                     console.log(result);
                     window.location.assign("/debrief");
                 });
@@ -271,6 +269,6 @@
     }
 
 </script>
-
+<script src="wrappedBarChart.js"></script>
 </body>
 </html>
