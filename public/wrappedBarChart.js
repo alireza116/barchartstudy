@@ -115,7 +115,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     console.log(average);
     var maxValue = d3.max(values);
     maxValue = maxValue + 0.01 * maxValue;
-    var threshold = parseInt(maxValue * threshPortion);
+    var threshold = maxValue * threshPortion;
     // threshold = d3.median(values) + 1;
     data = prepareData(values, threshold, wrapThresh);
 

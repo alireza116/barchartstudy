@@ -74,6 +74,7 @@ router.get("/api/consent", function(req, res) {
   if (!req.session.userid) {
     let token = randomstring.generate(8);
     let group = getRandomInt(2);
+    console.log(group);
     req.session.userid = token;
     req.session.group = group;
     let newResponse = new Response({

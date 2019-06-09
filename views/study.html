@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>wrapped</title>
+    <title>Viscenter Study</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
     <style> /* set the CSS */
@@ -169,20 +169,25 @@
     var currentIndex = 0;
     var current = forms[currentIndex];
     // normal bar first wrapped next is group 0
-    var group = 0;
+    var group;
     var thresholds = [1,0.1];
     var index = 0;
 
     $.get("/api/userinfo",function(data){
-        var group = data.group;
+        group = data.group;
         if (+group === 0){
             thresholds = [1,0.05];
-            
+            console.log(thresholds);
+            console.log(group);
         } else {
             thresholds = [0.05,1]
+            console.log(thresholds);
+            console.log(group);
         }
         Bar(index,0,thresholds[index]);
+        console.log("")
     })
+
 
 
     
@@ -223,48 +228,44 @@
                 } else{
                     alert("Please enter or select a value");
                 }
-
-
-
             } else {
+                if ($('#'+current).val() !== ""){
+                    if (index ===0){
+                        forms.forEach(function(d){
+                            user_data["firstBar"]["answers"].push([d,$("#"+d).val()]);
+                        });
 
-                if (index ===0){
-                    forms.forEach(function(d){
-                        user_data["firstBar"]["answers"].push([d,$("#"+d).val()]);
+                        console.log(user_data);
+
+                        forms.forEach(function(d,i){
+                            $("#"+d).val("");
+                            if (i >0){
+                                $("#"+d+"Form").css("display","none");
+                            }
+                        });
+
+                        $("#chart").empty();
+                        index = 1;
+                        $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
+                        $("button").unbind();
+                        Bar(index,0,thresholds[index]);
+
+                    } else {
+                        forms.forEach(function(d){
+                            user_data["secondBar"]["answers"].push([d,$("#"+d).val()]);
+                        });
+                        user_data["endTime"] = Date.now();
+                        $.post("/api/study",{data:user_data},success=function(result){
+                        console.log(result);
+                        window.location.assign("/debrief");
                     });
-
-                    console.log(user_data);
-
-                    forms.forEach(function(d,i){
-                        $("#"+d).val("");
-                        if (i >0){
-                            $("#"+d+"Form").css("display","none");
-                        }
-                    });
-
-                    $("#chart").empty();
-                    index = 1;
-                    $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
-                    $("button").unbind();
-                    Bar(index,0,thresholds[index]);
-
-                } else {
-                    forms.forEach(function(d){
-                        user_data["secondBar"]["answers"].push([d,$("#"+d).val()]);
-                    });
-                    user_data["endTime"] = Date.now();
-                    $.post("/api/study",{data:user_data},success=function(result){
-                    console.log(result);
-                    window.location.assign("/debrief");
-                });
-
-                    alert("done!")
-                }
-
-
+                    }
 
             }
-
+                else {
+                    alert("Please enter or select a value")
+                }
+            } 
         })
     }
 
