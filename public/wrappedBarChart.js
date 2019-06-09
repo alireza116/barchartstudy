@@ -34,18 +34,22 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   //FOR Ad in Facebook
 
   if (index === 0) {
+    fileName = "attention1";
+    sortValue = "State";
+    xValue = "State";
+    yValue = "Sales";
+  } else if (index === 1) {
     fileName = "PresidentialCandidates";
     sortValue = "Page Name";
     xValue = "Page Name";
     yValue = "Number of Ads in Library";
   } else if (index === 2) {
-    //For gun deaths in US states
-    fileName = "gunDeathsByState";
-    sortValue = "state";
-    xValue = "state";
-    yValue = "count";
-  } else if (index === 1) {
     //For congress number of Misconduct
+    fileName = "attention2";
+    sortValue = "Car";
+    xValue = "Car";
+    yValue = "Sales";
+  } else if (index === 3) {
     fileName = "congressMisconduct";
     sortValue = "decade";
     xValue = "decade";
@@ -404,11 +408,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     var m = d3.mouse(this);
     // console.log(data);
     if (Date.now() - prevTime > 250) {
-      if (index === 0) {
-        user_data["firstBar"]["mousePositions"].push([current, m]);
-      } else if (index === 1) {
-        user_data["secondBar"]["mousePositions"].push(current, m);
-      }
+      user_data[index.toString()]["mousePositions"].push([current, m]);
       prevTime = Date.now();
     }
 

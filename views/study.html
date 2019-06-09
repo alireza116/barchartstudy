@@ -140,8 +140,10 @@
 
     var user_data = {
         "startTime" : Date.now(),
-        "firstBar":{"answers":[],"times":[],"mousePositions":[]},
-        "secondBar":{"answers":[],"times":[],"mousePositions":[]},
+        "0":{"answers":[],"times":[],"mousePositions":[]},
+        "1":{"answers":[],"times":[],"mousePositions":[]},
+        "2":{"answers":[],"times":[],"mousePositions":[]},
+        "3":{"answers":[],"times":[],"mousePositions":[]},
         "endTime": null
     };
 
@@ -163,7 +165,9 @@
         "what percentage is the value of the lowest bar to the second lowest bar? (input a number)"
     ];
 
-    var titles = ["Number of Facebook ads by US presidential candidates for the 2020 election",
+    var titles = ["Agricultural sales by state in the United Sates",
+    "Number of Facebook ads by US presidential candidates for the 2020 election",
+    "Sales of different brands of cars",
         "Number of resignation of the members of the US Congress by decade"];
 
     var currentIndex = 0;
@@ -176,11 +180,11 @@
     $.get("/api/userinfo",function(data){
         group = data.group;
         if (+group === 0){
-            thresholds = [1,0.05];
+            thresholds = [1,0.1];
             console.log(thresholds);
             console.log(group);
         } else {
-            thresholds = [0.05,1]
+            thresholds = [0.1,1]
             console.log(thresholds);
             console.log(group);
         }
@@ -193,7 +197,7 @@
     
 
     function Bar(index,wrapThresh,threshold){
-
+    
         $("#barChartTitle").text(titles[index]);
 
         currentIndex = 0;
@@ -206,11 +210,13 @@
     function addClickListener(){
         $("#"+current+"Submit").click(function(event){
             event.preventDefault();
-            if (index===0){
-                user_data["firstBar"]["times"].push(Date.now());
-            } else {
-                user_data["secondBar"]["times"].push(Date.now());
-            }
+//            if (index===0){
+//                user_data["firstBar"]["times"].push(Date.now());
+//            } else {
+//                user_data["secondBar"]["times"].push(Date.now());
+//            }
+
+            user_data[index.toString()]["times"].push(Date.now());
 
             if (currentIndex < forms.length-1) {
                 if ($('#'+current).val() !== ""){
@@ -230,12 +236,11 @@
                 }
             } else {
                 if ($('#'+current).val() !== ""){
-                    if (index ===0){
+                    if (index <3){
                         forms.forEach(function(d){
-                            user_data["firstBar"]["answers"].push([d,$("#"+d).val()]);
+                            user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
                         });
 
-                        console.log(user_data);
 
                         forms.forEach(function(d,i){
                             $("#"+d).val("");
@@ -245,14 +250,20 @@
                         });
 
                         $("#chart").empty();
-                        index = 1;
+                        index += 1;
                         $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
                         $("button").unbind();
-                        Bar(index,0,thresholds[index]);
+
+                        if (index === 0 | index === 1){
+                            Bar(index,0,thresholds[0]);
+                        } else {
+                             Bar(index,0,thresholds[1]);
+                        }
+                        
 
                     } else {
                         forms.forEach(function(d){
-                            user_data["secondBar"]["answers"].push([d,$("#"+d).val()]);
+                            user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
                         });
                         user_data["endTime"] = Date.now();
                         $.post("/api/study",{data:user_data},success=function(result){

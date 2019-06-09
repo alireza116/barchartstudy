@@ -46,8 +46,10 @@ const responseSchema = new Schema({
   group: Number,
   startTime: Number,
   endTime: Number,
-  firstBar: Schema.Types.Mixed,
-  secondBar: Schema.Types.Mixed
+  "0": Schema.Types.Mixed,
+  "1": Schema.Types.Mixed,
+  "2": Schema.Types.Mixed,
+  "3": Schema.Types.Mixed
 });
 
 function getRandomInt(max) {
