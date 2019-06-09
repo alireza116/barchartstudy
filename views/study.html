@@ -70,7 +70,9 @@
             margin-top: 5px;
         }
 
-
+    .emphasis{
+        font-weight: bold;
+    }
 
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -98,32 +100,32 @@
         <form class="questions">
             <h3>Please answer the following questions</h3>
             <fieldset class="form-group" id="highestForm"  >
-                    <label for="highest" >Identify the bar with the highest value (click on a bar in the chart).</label>
+                    <label for="highest" >Identify the bar with the <span class="emphasis">highest</span> value (click on a bar in the chart).</label>
                     <input type="text" class="form-control" id="highest" name="highest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
                 <button type="submit" class="btn btn-primary" id="highestSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="lowestForm"  style="display: none">
-                <label for="lowest" >Identify the bar with the lowest value (click on a bar in the chart).</label>
+                <label for="lowest" >Identify the bar with the <span class="emphasis">lowest</span> value (click on a bar in the chart).</label>
                 <input type="text" class="form-control" id="lowest" name="lowest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
                 <button type="submit" class="btn btn-primary" id="lowestSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="firstPercentageForm" style="display: none" >
-                <label for="firstPercentage" >How many times is the value of the highest bar to the lowest bar? (input a number in the text bar)</label>
+                <label for="firstPercentage" >How many times is the value of the <span class="emphasis">highest</span> bar to the <span class="emphasis">lowest</span> bar? (input a number in the text bar)</label>
                 <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="secondHighestForm" style="display: none" >
-                <label for="secondHighest" >Identify the bar with the second highest value (click on a bar in the chart).</label>
+                <label for="secondHighest" >Identify the bar with the <span class="emphasis">second highest</span> value (click on a bar in the chart).</label>
                 <input type="text" class="form-control" id="secondHighest" name="secondHighest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
                 <button type="submit" class="btn btn-primary" id="secondHighestSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="secondLowestForm"  style="display: none">
-                <label for="secondLowest" >Identify the bar with the second lowest value (click on a bar in the chart).</label>
+                <label for="secondLowest" >Identify the bar with the <span class="emphasis">second lowest</span> value (click on a bar in the chart).</label>
                 <input type="text" class="form-control" id="secondLowest" name="secondLowest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
                 <button type="submit" class="btn btn-primary" id="secondLowestSubmit">Submit</button>
             </fieldset>
             <fieldset class="form-group" id="secondPercentageForm" style="display: none" >
-                <label for="secondPercentage" >How many times is the value of the second lowest bar to the lowest bar? (input a number in the text bar)</label>
+                <label for="secondPercentage" >How many times is the value of the <span class="emphasis">second lowest</span> bar to the <span class="emphasis">lowest</span> bar? (input a number in the text bar)</label>
                 <input type="number" class="form-control" min=1 id="secondPercentage" name="secondPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="secondPercentageSubmit">Submit</button>
             </fieldset>

@@ -70,12 +70,12 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  svg
-    .append("clipPath") // define a clip path
-    .attr("id", "rect-clip") // give the clipPath an ID
-    .append("rect") // shape it as an ellipse
-    .attr("width", width) // position the x-centre
-    .attr("height", height); // position the y-centre
+  //   svg
+  //     .append("clipPath") // define a clip path
+  //     .attr("id", "rect-clip") // give the clipPath an ID
+  //     .append("rect") // shape it as an ellipse
+  //     .attr("width", width) // position the x-centre
+  //     .attr("height", height); // position the y-centre
 
   // svg.append("text")
   //     .attr("transform",
@@ -120,7 +120,10 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     var maxValue = d3.max(values);
     maxValue = maxValue + 0.01 * maxValue;
     var threshold = maxValue * threshPortion;
-    // threshold = d3.median(values) + 1;
+    if (threshPortion != 1) {
+      threshold = d3.median(values) + 1;
+    }
+    //
     data = prepareData(values, threshold, wrapThresh);
 
     // Three scales for x, y, and help axis and one scale for color
@@ -129,10 +132,11 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
       .scaleLinear()
       .range([0, height * (1 - wrapThresh)])
       .domain([threshold, wrapThresh * threshold]);
-    var color = d3
-      .scaleLinear()
-      .range(["teal", "red"])
-      .domain(d3.extent(values));
+
+    // var color = d3
+    //   .scaleLinear()
+    //   .range(["teal", "red"])
+    //   .domain(d3.extent(values));
 
     // D3 Line Function
     var valueline = d3
@@ -221,10 +225,9 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
 
     console.log(y.ticks(8));
 
-    focus = svg.append("g").attr("class", "focus");
-    //            .style("display", "none");
-
-    focus
+    focus = svg
+      .append("g")
+      .attr("class", "focus")
       .append("line")
       .attr("x1", 0)
       .attr("x2", 0)
@@ -232,8 +235,8 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
       .attr("y2", 0)
       .attr("stroke", "red")
       .attr("stroke-width", strokeWidth)
-      .attr("stroke-opacity", 0.5);
-    //   .style("display", "none");
+      .attr("stroke-opacity", 0.0);
+    //            .style("display", "none");
 
     svg
       .append("rect")
@@ -246,10 +249,10 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
         $("#" + current).val(focusCat);
       })
       .on("mouseover", function() {
-        focus.style("display", null);
+        focus.attr("stroke-opacity", 0.5);
       })
       .on("mouseout", function() {
-        focus.style("display", "none");
+        focus.attr("stroke-opacity", 0.0);
         xAxis.selectAll("text").style("fill", "black");
       })
       .on("mousemove", mousemove);
