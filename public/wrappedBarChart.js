@@ -107,7 +107,9 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     var threshold = maxValue * threshPortion;
     if (threshPortion != 1) {
       threshold = d3.median(values);
-      if (threshold < 1000) {
+      if (threshold < 100) {
+        threshold = Math.round(threshold / 10) * 10;
+      } else if (threshold < 1000) {
         threshold = Math.round(threshold / 100) * 100;
       } else {
         threshold = Math.round(threshold / 1000) * 1000;
@@ -442,24 +444,24 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   function prepareData(values, thresh, wrapThresh) {
     var level = 0.5;
     var levels = [];
-    var barCount = 0;
+    // var barCount = 0;
     var data = values.map(function(d, i) {
       if (d <= thresh) {
         var p = [{ Y: 0, X: level * xGap }, { Y: d, X: level * xGap }];
         levels.push(level * xGap);
         level += 1;
-        barCount += 1;
+        // barCount += 1;
         return p;
       } else {
         var points = [];
-        var numWrap;
+        var numWrap = 1;
         if (wrapThresh !== 0 && wrapThresh !== 1) {
           numWrap = (d - thresh) / ((1 - wrapThresh) * thresh);
         } else {
           numWrap = d / thresh - 1;
         }
-        barCount += parseInt(numWrap);
-        barCount += 2;
+        // barCount += parseInt(numWrap);
+        // barCount += 2;
         points.push({ Y: 0, X: level * xGap });
         levels.push(level * xGap);
         var l;
