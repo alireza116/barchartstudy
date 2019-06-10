@@ -87,19 +87,27 @@
 <h1>Instructions</h1>
 <h2>Please read these instructions carefully</h2>
 <p>
-In this study, we will show you two types of bar chart and ask you to answer specific questions about it. <br>
-The first type, is a normal bar chart, one with every bar corresponding to a data point about a category. The taller the bar, the higher the value. <br>
+In this study, we will show you two types of bar chart and ask you to answer specific questions. <br>
+The first type is a standard bar chart, one with every bar corresponding to a value about a category. The taller the bar, the higher the value. <br>
 <img src="normal.JPG"  width="100%">
-The second type, is a modified version. We call it a wrapped bar chart. The way wrapped bar charts work is that bars taller than a certain threshold will wrap around themselves. <br>
-For example, a bar having a value of 5100 will wrap 5 and a fifth times if the threshold is a 1000.<br>
-The horizontal parts of the wrapped bar charts do not count towards the total value of the bar. So you can simply estimate the total value of a wrapped bar by counting how the number of times a bar has wrapped and multiplying by the threshold.  The image below shows how it works. <br>
+The second type is a modified version. We call it a wrapped bar chart. The way wrapped bar charts work is that bars taller than a certain threshold will wrap around themselves. <br>
+For example, a bar having a value of 5000 will wrap 5 times if the threshold is a 1000.<br>
+<strong>The horizontal parts of the wrapped bar charts do not count towards the total value of the bar</strong>. So you can simply estimate the total value of a wrapped bar by counting the number of times a bar has wrapped and multiplying by the threshold.  The image below shows how it works.<br>
 <img src="wrapped.JPG" width="100%">
-<br>
-<br>
-In this study, we will ask you to use these two types of bar chart to answer questions about two datasets. <br>
+<form>
+            <fieldset class="form-group" id="test" >
+                <label for="understanding" >What is the value of the first bar ( on the left )?</label>
+                <input type="number" class="form-control" min=1 id="understanding" name="understanding" aria-describedby="emailHelp" placeholder="Input a Number">
+            </fieldset>
+</form>
+
+In this study, we will ask you to use these two types of bar chart to answer questions about two datasets. <br> <br>
 The questions we ask are of two types: <br>
-To find specific bars, such as the one with the highest value, the lowest value, or the second highest <br>
-And to compare two bars in terms of porportions. For example, we will ask you how many times is the value of the tallest bar to the shortest bar. <br>
+<ul>
+<li>To find specific bars, such as the one with the highest value, the lowest value, or the second highest </li>
+<li>And to compare two bars in terms of porportions.  </li>
+</ul>
+For example, we will ask you how many times is the value of the tallest bar to the shortest bar. <br>
 For example, if a bar has a value of 5000 and another has a value of 500, the taller bar is 10 times the value of the shorter bar. <br>
 We are asking you to estimate, so please do your best. <br>
 When you are ready, please click continue. The study will take you through two bar charts! <br>
@@ -111,9 +119,14 @@ When you are ready, please click continue. The study will take you through two b
 <script>
         $("#continue").click(function(event){
             event.preventDefault();
-            window.location.assign("/study");
+            var value = +$("#understanding").val()
+            if (value !== 8000 ) {
+                alert("incorrect answer, please read the instructions on the wrapped bar chart and try again.")
+            } else {
+        window.location.assign("/study");
+            }
+            
         })
-
 
 </script>
 

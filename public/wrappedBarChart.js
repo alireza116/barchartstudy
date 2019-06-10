@@ -1,3 +1,4 @@
+var csvData;
 function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   var pageWidth = document.querySelector("#main").offsetWidth;
   var margin = { top: 20, right: 50, bottom: 100, left: 50 },
@@ -6,7 +7,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   height = $("#chart").height() - margin.top - margin.bottom;
 
   // Bar Chart Variables
-  var strokeWidth = 6;
+  var strokeWidth = 5;
   var withSlider = false;
   var xGap = 50;
   // var threshPortion = 0.3;
@@ -70,28 +71,12 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  //   svg
-  //     .append("clipPath") // define a clip path
-  //     .attr("id", "rect-clip") // give the clipPath an ID
-  //     .append("rect") // shape it as an ellipse
-  //     .attr("width", width) // position the x-centre
-  //     .attr("height", height); // position the y-centre
-
-  // svg.append("text")
-  //     .attr("transform",
-  //         "translate(" + (width/2) + " ," +
-  //         (height + margin.top+ 100) + ")")
-  //     .style("text-anchor", "middle").style("font-size","1.1em")
-  //     .text(xValue);
-  //
-  // // text label for the y axis
-  // svg.append("text")
-  //     .attr("transform", "rotate(-90)")
-  //     .attr("y", 0 - margin.left)
-  //     .attr("x",0 - (height / 2))
-  //     .attr("dy", "1em")
-  //     .style("text-anchor", "middle").style("font-size","1em")
-  //     .text(yValue);
+  svg
+    .append("clipPath") // define a clip path
+    .attr("id", "rect-clip") // give the clipPath an ID
+    .append("rect") // shape it as an ellipse
+    .attr("width", width) // position the x-centre
+    .attr("height", height); // position the y-centre
 
   d3.csv(fileName + ".csv").then(function(csvData) {
     console.log(csvData);
@@ -121,9 +106,16 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     maxValue = maxValue + 0.01 * maxValue;
     var threshold = maxValue * threshPortion;
     if (threshPortion != 1) {
-      threshold = d3.median(values) + 1;
+      threshold = d3.median(values);
+      if (threshold < 1000) {
+        threshold = Math.round(threshold / 100) * 100;
+      } else {
+        threshold = Math.round(threshold / 1000) * 1000;
+      }
+      console.log("threshold");
+      console.log(threshold);
     }
-    //
+
     data = prepareData(values, threshold, wrapThresh);
 
     // Three scales for x, y, and help axis and one scale for color
@@ -132,11 +124,6 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
       .scaleLinear()
       .range([0, height * (1 - wrapThresh)])
       .domain([threshold, wrapThresh * threshold]);
-
-    // var color = d3
-    //   .scaleLinear()
-    //   .range(["teal", "red"])
-    //   .domain(d3.extent(values));
 
     // D3 Line Function
     var valueline = d3
@@ -148,7 +135,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
         return y(d.Y);
       });
 
-    x.domain([0, data.level * xGap]);
+    x.domain([0, (data.level - 1) * xGap]);
     y.domain([0, threshold]);
 
     // bar charts
@@ -180,7 +167,12 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     yAxis = svg
       .append("g")
       .call(d3.axisLeft(y).tickSize(-width))
-      .style("font-size", "0.8em");
+      .style("font-size", "0.7m");
+
+    yAxis
+      .selectAll(".tick")
+      .select("line")
+      .attr("stroke", "grey");
 
     // x axis
     xAxis = svg
@@ -194,7 +186,12 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
             return labels[i];
           })
       )
-      .style("font-size", "0.8em");
+      .style("font-size", "0.7em");
+
+    xAxis
+      .selectAll(".tick")
+      .select("line")
+      .attr("stroke", "grey");
 
     // rotate x axis
     xAxis
@@ -209,7 +206,8 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     var helpAxis = svg
       .append("g")
       .attr("transform", "translate(" + width + ", 0 )")
-      .call(d3.axisLeft(help).tickValues([wrapThresh * threshold, threshold]));
+      .call(d3.axisLeft(help).tickValues([wrapThresh * threshold, threshold]))
+      .attr("display", "none");
 
     helpAxis.selectAll("text").attr("transform", "translate(40,0)");
 
@@ -221,9 +219,8 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
         "transform",
         "translate(" + (width + 10) + "," + helpTranslate + ")"
       )
-      .text(parseInt(threshold - wrapThresh * threshold));
-
-    console.log(y.ticks(8));
+      .text(parseInt(threshold - wrapThresh * threshold))
+      .attr("display", "none");
 
     focus = svg
       .append("g")
@@ -233,7 +230,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
       .attr("x2", 0)
       .attr("y1", height)
       .attr("y2", 0)
-      .attr("stroke", "red")
+      .attr("stroke", "purple")
       .attr("stroke-width", strokeWidth)
       .attr("stroke-opacity", 0.0);
     //            .style("display", "none");
@@ -360,6 +357,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
           // Add the Y Axis
           yAxis.call(d3.axisLeft(y).tickSize(-width));
 
+          console.log(data);
           xAxis.call(
             d3
               .axisBottom(x)
@@ -404,9 +402,6 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
     }
   });
 
-  //    var values = [8000,1750, 500, 2300 , 300 , 8000,50,150, 5000, 1234];
-  //    var labels = ["a","b","c","d","E","f","GG","Hh", "asdoz","xcv"];
-
   function mousemove(d) {
     var tickPos = data.tickLevels;
     var m = d3.mouse(this);
@@ -425,16 +420,14 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
         xI = i;
       }
     }
-    //        focus
-    //            .select('text')
-    //            .text(ticks[xI]);
+
     focus.attr("transform", "translate(" + x(tickPos[xI]) + "," + 0 + ")");
 
     focusCat = labels[xI];
 
     xAxis.selectAll("text").style("fill", function(d, i) {
       if (i === xI) {
-        return "red";
+        return "purple";
       } else {
         return "black";
       }
@@ -447,11 +440,11 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   // in the above example, 1500 is the value, it wraps at 500, so 1000 is left, and it will wrap at 250, so it will wrap four times.
 
   function prepareData(values, thresh, wrapThresh) {
-    var level = 1;
+    var level = 0.5;
     var levels = [];
     var barCount = 0;
     var data = values.map(function(d, i) {
-      if (d < thresh) {
+      if (d <= thresh) {
         var p = [{ Y: 0, X: level * xGap }, { Y: d, X: level * xGap }];
         levels.push(level * xGap);
         level += 1;
@@ -500,8 +493,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
         return points;
       }
     });
-    console.log("total width");
-    console.log(level * xGap);
+
     //        console.log(width - level*xGap);
 
     return { lines: data, level: level, tickLevels: levels };

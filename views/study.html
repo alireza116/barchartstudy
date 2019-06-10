@@ -43,8 +43,10 @@
 
 
     .navbar{
-        height:5%;
+        height:8%;
         width: 100%;
+            display: flex;
+    align-items: center;
     }
     #chart{
         height:50%;
@@ -52,10 +54,10 @@
 
     }
     #questions{
-        height:45%;
+        height:42%;
         width: 100%;
 
-        overflow: scroll;
+        overflow: auto;
     }
     .questions{
         padding-top:20px;
@@ -74,6 +76,12 @@
         font-weight: bold;
     }
 
+    p.navbar-brand{
+        font-size:1em;
+        margin:0;
+        padding:0;
+    }
+
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -89,10 +97,10 @@
 
 <div class="container-fluid" style="width:100%; margin: 0 auto" id="main">
     <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">User Study</a>
-            <h4 class="navbar-nav ml-auto" style="color:white" id="barChartTitle">
-                Bar chart title
-            </h4>
+        <p class="navbar-brand">User Study</p>
+        <p class="navbar-brand ml-auto" id="barChartTitle">
+            Bar chart title
+        </p>
     </nav>
     <div id="chart"></div>
     <div id="questions">
