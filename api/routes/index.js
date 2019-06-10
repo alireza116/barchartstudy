@@ -114,7 +114,7 @@ router.get("/consent", function(req, res) {
 });
 
 router.get("/instructions", function(req, res) {
-  if (req.session.userid) {
+  if (!req.session.userid) {
     res.render("consent.html");
   } else {
     res.render("instructions.html");
@@ -122,7 +122,7 @@ router.get("/instructions", function(req, res) {
 });
 
 router.get("/study", function(req, res) {
-  if (!req.session.userid) {
+  if (!req.session.completed) {
     res.render("consent.html");
   } else {
     res.render("debrief.html");
