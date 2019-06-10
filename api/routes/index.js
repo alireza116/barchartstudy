@@ -122,10 +122,10 @@ router.get("/instructions", function(req, res) {
 });
 
 router.get("/study", function(req, res) {
-  if (!req.session.completed) {
+  if (!req.session.userid) {
     res.render("consent.html");
   } else {
-    res.render("debrief.html");
+    res.render("study.html");
   }
 });
 
