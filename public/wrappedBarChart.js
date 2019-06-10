@@ -243,6 +243,7 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
       .attr("class", "overlay")
       .attr("width", width)
       .attr("height", height)
+      .attr("stroke", 0)
       .on("click", function() {
         // console.log(current);
         d3.select("#" + current).property("value", focusCat);

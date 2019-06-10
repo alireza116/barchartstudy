@@ -6,9 +6,6 @@ const csv = require("csv-parser");
 const fs = require("fs");
 const math = require("mathjs");
 
-// const url =
-//   "mongodb://markant:emotion2019@ds159025.mlab.com:59025/markantstudy";
-
 const url =
   "mongodb://viscenter:anchoring2019@ds051831.mlab.com:51831/anchoring";
 
@@ -32,11 +29,6 @@ function zip() {
 }
 
 const Schema = mongoose.Schema;
-
-//stance : 1 == for  & 0 == against
-// claim : 1== high  & 0 == low
-// block: 1== Block & 0 == turn
-// sentiment: 1== Hight & 0 == low
 const responseSchema = new Schema({
   usertoken: {
     type: String,
@@ -122,16 +114,16 @@ router.get("/consent", function(req, res) {
 });
 
 router.get("/instructions", function(req, res) {
-  if (req.session.completed) {
-    res.render("debrief.html");
+  if (req.session.userid) {
+    res.render("consent.html");
   } else {
     res.render("instructions.html");
   }
 });
 
 router.get("/study", function(req, res) {
-  if (!req.session.completed) {
-    res.render("study.html");
+  if (!req.session.userid) {
+    res.render("consent.html");
   } else {
     res.render("debrief.html");
   }
