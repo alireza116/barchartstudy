@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <title>Viscenter Study</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.0/math.js"></script>
+    <!--<script src="https://unpkg.com/d3-simple-slider"></script>-->
     <style> /* set the CSS */
 
     .line {
@@ -39,6 +45,7 @@
 
     #chart{
         margin: 0 auto;
+        width:80%
     }
 
 
@@ -50,7 +57,7 @@
     }
     #chart{
         height:50%;
-        width: 100%;
+        width: 80%;
 
     }
     #questions{
@@ -122,97 +129,57 @@
                 <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
             </fieldset>
-            <fieldset class="form-group" id="secondHighestForm" style="display: none" >
-                <label for="secondHighest" >Identify the bar with the <span class="emphasis">second highest</span> value (click on a bar in the chart).</label>
-                <input type="text" class="form-control" id="secondHighest" name="secondHighest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
-                <button type="submit" class="btn btn-primary" id="secondHighestSubmit">Submit</button>
-            </fieldset>
-            <fieldset class="form-group" id="secondLowestForm"  style="display: none">
-                <label for="secondLowest" >Identify the bar with the <span class="emphasis">second lowest</span> value (click on a bar in the chart).</label>
-                <input type="text" class="form-control" id="secondLowest" name="secondLowest" aria-describedby="emailHelp" placeholder="Hover and click on the appropriate bar" disabled="disabled">
-                <button type="submit" class="btn btn-primary" id="secondLowestSubmit">Submit</button>
-            </fieldset>
-            <fieldset class="form-group" id="secondPercentageForm" style="display: none" >
-                <label for="secondPercentage" >How many times is the value of the <span class="emphasis">second lowest</span> bar to the <span class="emphasis">lowest</span> bar? (input a number in the text bar)</label>
-                <input type="number" class="form-control" min=1 id="secondPercentage" name="secondPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
-                <button type="submit" class="btn btn-primary" id="secondPercentageSubmit">Submit</button>
-            </fieldset>
         </form>
     </div>
 </div>
-<div id="thresh">
-    <!--<p>Bar Chart Threshold</p>-->
-</div>
-<div id="wrap">
-    <!--<p>Wrap Threshold</p>-->
-</div>
+
 <script>
 
     var user_data = {
         "startTime" : Date.now(),
-        "0":{"answers":[],"times":[],"mousePositions":[]},
-        "1":{"answers":[],"times":[],"mousePositions":[]},
-        "2":{"answers":[],"times":[],"mousePositions":[]},
-        "3":{"answers":[],"times":[],"mousePositions":[]},
         "endTime": null
     };
 
     var forms = [
         "highest",
         "lowest",
-        "firstPercentage",
-        "secondHighest",
-        "secondLowest",
-        "secondPercentage"
+        "firstPercentage"
     ];
 
     var questions = [
         "Identify the bar with the highest value",
         "Identify the bar with the lowest value",
-        "what is percentage is the value of the lowest bar to the highest bar? (input a number)",
-        "identify the bar with the second highest value",
-        "identify the bar with the second lowest value",
-        "what percentage is the value of the lowest bar to the second lowest bar? (input a number)"
+        "what is the ratio of the highest bar to the lowest bar?(input a number)"
+
     ];
 
-    var titles = ["Agricultural sales by state in the United Sates",
-    "Number of Facebook ads by US presidential candidates for the 2020 election",
-    "Sales of different brands of cars",
-        "Number of resignation of the members of the US Congress by decade"];
+
 
     var currentIndex = 0;
     var current = forms[currentIndex];
-    // normal bar first wrapped next is group 0
-    var group;
-    var thresholds = [1,0.1];
     var index = 0;
+    user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
+    user_data[index.toString()]["times"].push(Date.now());
+    var data;
 
-    $.get("/api/userinfo",function(data){
-        group = data.group;
-        if (+group === 0){
-            thresholds = [1,0.1];
-            console.log(thresholds);
-            console.log(group);
-        } else {
-            thresholds = [0.1,1]
-            console.log(thresholds);
-            console.log(group);
-        }
-        Bar(index,0,thresholds[index]);
-        console.log("")
-    })
+    d3.json("data.json").then(function(d){
+       data = d;
+        values = data[index]["values"];
+
+        var threshold = math.quantileSeq(values,0.75);
+        threshold = Math.round(threshold/100)*100;
+        Bar(values,threshold);
+    });
 
 
-
+    function Bar(values,threshold){
     
-
-    function Bar(index,wrapThresh,threshold){
-    
-        $("#barChartTitle").text(titles[index]);
+        $("#barChartTitle").text("barchart " + index);
 
         currentIndex = 0;
-        current = forms[currentIndex];
-        var barChart = new wrappedBarChart(index,wrapThresh,threshold);
+        current = forms[currentIndex]
+        user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
+        var barChart = new wrappedBarChart(values,threshold);
 
         addClickListener();
     }
@@ -246,7 +213,7 @@
                 }
             } else {
                 if ($('#'+current).val() !== ""){
-                    if (index <3){
+                    if (index <data.length-1){
                         forms.forEach(function(d){
                             user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
                         });
@@ -264,12 +231,12 @@
                         $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
                         $("button").unbind();
 
-                        if (index === 0 | index === 1){
-                            Bar(index,0,thresholds[0]);
-                        } else {
-                             Bar(index,0,thresholds[1]);
-                        }
-                        
+
+                        values = data[index]["values"];
+                        user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
+                        var threshold = math.quantileSeq(values,0.75);
+                        threshold = Math.round(threshold/100)*100;
+                        Bar(values,threshold);
 
                     } else {
                         forms.forEach(function(d){
@@ -291,6 +258,6 @@
     }
 
 </script>
-<script src="wrappedBarChart.js"></script>
+<script src="newWrappedBarChart.js"></script>
 </body>
 </html>

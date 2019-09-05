@@ -38,17 +38,14 @@ const responseSchema = new Schema({
   group: Number,
   startTime: Number,
   endTime: Number,
-  "0": Schema.Types.Mixed,
-  "1": Schema.Types.Mixed,
-  "2": Schema.Types.Mixed,
-  "3": Schema.Types.Mixed
+  responses: Schema.Types.Mixed
 });
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-const Response = mongoose.model("wrapBarChart", responseSchema);
+const Response = mongoose.model("newWrapBarChart", responseSchema);
 
 router.get("/api/userinfo", function(req, res) {
   console.log(req.session.userid);
@@ -67,8 +64,8 @@ router.get("/api/consent", function(req, res) {
 
   if (!req.session.userid) {
     let token = randomstring.generate(8);
-    let group = getRandomInt(2);
-    // let group = 1;
+    // let group = getRandomInt(2);
+    let group = 0;
     console.log(group);
     req.session.userid = token;
     req.session.group = group;
@@ -90,7 +87,7 @@ router.post("/api/study", function(req, res) {
   let token = req.session.userid;
   let data = req.body.data;
   console.log(data);
-  Response.findOneAndUpdate({ usertoken: token }, data, function(err, doc) {
+  Response.findOneAndUpdate({ usertoken: token },{"responses": data}, function(err, doc) {
     if (err) {
       return res.send(500, { error: err });
     }

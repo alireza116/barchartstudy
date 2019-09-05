@@ -1,5 +1,5 @@
 var csvData;
-function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
+function wrappedBarChart(values, wrapThresh, threshPortion) {
   var pageWidth = document.querySelector("#main").offsetWidth;
   var margin = { top: 20, right: 50, bottom: 100, left: 50 },
     // width = pageWidth - margin.left - margin.right - 100,
@@ -34,28 +34,6 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   var prevTime = Date.now();
   //FOR Ad in Facebook
 
-  if (index === 0) {
-    fileName = "attention1";
-    sortValue = "State";
-    xValue = "State";
-    yValue = "Sales";
-  } else if (index === 1) {
-    fileName = "PresidentialCandidates";
-    sortValue = "Page Name";
-    xValue = "Page Name";
-    yValue = "Number of Ads in Library";
-  } else if (index === 2) {
-    //For congress number of Misconduct
-    fileName = "attention2";
-    sortValue = "Car";
-    xValue = "Car";
-    yValue = "Sales";
-  } else if (index === 3) {
-    fileName = "congressMisconduct";
-    sortValue = "decade";
-    xValue = "decade";
-    yValue = "count";
-  }
 
   var data;
 
@@ -441,63 +419,148 @@ function wrappedBarChart(indexNumber, wrapThresh, threshPortion) {
   // wrapthresh defines at what portion of the y axis will the bars wrap, so if wrapthresh is 0.5, the data will wrap at the half point of y axis
   // in the above example, 1500 is the value, it wraps at 500, so 1000 is left, and it will wrap at 250, so it will wrap four times.
 
-  function prepareData(values, thresh, wrapThresh) {
-    var level = 0.5;
-    var levels = [];
-    // var barCount = 0;
-    var data = values.map(function(d, i) {
-      if (d <= thresh) {
-        var p = [{ Y: 0, X: level * xGap }, { Y: d, X: level * xGap }];
-        levels.push(level * xGap);
-        level += 1;
-        // barCount += 1;
-        return p;
-      } else {
-        var points = [];
-        var numWrap = 1;
-        if (wrapThresh !== 0 && wrapThresh !== 1) {
-          numWrap = (d - thresh) / ((1 - wrapThresh) * thresh);
-        } else {
-          numWrap = d / thresh - 1;
-        }
-        // barCount += parseInt(numWrap);
-        // barCount += 2;
-        points.push({ Y: 0, X: level * xGap });
-        levels.push(level * xGap);
-        var l;
-        for (l = 0; l < numWrap; l++) {
-          if (l % 2 === 0) {
-            points.push({ Y: thresh, X: level * xGap });
-            //                        level += 0.3;
-            level += 0.25;
+  // function prepareData(values, thresh, wrapThresh) {
+  //   var level = 0.5;
+  //   var levels = [];
+  //   // var barCount = 0;
+  //   var data = values.map(function(d, i) {
+  //     if (d <= thresh) {
+  //       var p = [{ Y: 0, X: level * xGap }, { Y: d, X: level * xGap }];
+  //       levels.push(level * xGap);
+  //       level += 1;
+  //       // barCount += 1;
+  //       return p;
+  //     } else {
+  //       var points = [];
+  //       var numWrap = 1;
+  //       if (wrapThresh !== 0 && wrapThresh !== 1) {
+  //         numWrap = (d - thresh) / ((1 - wrapThresh) * thresh);
+  //       } else {
+  //         numWrap = d / thresh - 1;
+  //       }
+  //       // barCount += parseInt(numWrap);
+  //       // barCount += 2;
+  //       points.push({ Y: 0, X: level * xGap });
+  //       levels.push(level * xGap);
+  //       var l;
+  //       for (l = 0; l < numWrap; l++) {
+  //         if (l % 2 === 0) {
+  //           points.push({ Y: thresh, X: level * xGap });
+  //           //                        level += 0.3;
+  //           level += 0.25;
+  //
+  //           points.push({ Y: thresh, X: level * xGap });
+  //         } else {
+  //           points.push({ Y: thresh * wrapThresh, X: level * xGap });
+  //           //                        level += 0.3;
+  //           level += 0.25;
+  //           points.push({ Y: thresh * wrapThresh, X: level * xGap });
+  //         }
+  //       }
+  //
+  //       var portion = numWrap % 1;
+  //       var prevY = points[points.length - 1].Y;
+  //       console.log(numWrap);
+  //       //                points.push({X:(portion/thresh)*thresh,Y:level*xGap});
+  //       points.push({
+  //         Y:
+  //           parseInt(numWrap) % 2 === 0
+  //             ? prevY - portion * (thresh * (1 - wrapThresh))
+  //             : prevY + portion * (thresh * (1 - wrapThresh)),
+  //         X: level * xGap
+  //       });
+  //       level += 1;
+  //       return points;
+  //     }
+  //   });
+  //
+  //   //        console.log(width - level*xGap);
+  //
+  //   return { lines: data, level: level, tickLevels: levels };
+  // }
 
-            points.push({ Y: thresh, X: level * xGap });
-          } else {
-            points.push({ Y: thresh * wrapThresh, X: level * xGap });
-            //                        level += 0.3;
-            level += 0.25;
-            points.push({ Y: thresh * wrapThresh, X: level * xGap });
-          }
-        }
+    function prepareData(values, thresh, wrapThresh) {
+        console.log(values);
 
-        var portion = numWrap % 1;
-        var prevY = points[points.length - 1].Y;
-        console.log(numWrap);
-        //                points.push({X:(portion/thresh)*thresh,Y:level*xGap});
-        points.push({
-          Y:
-            parseInt(numWrap) % 2 === 0
-              ? prevY - portion * (thresh * (1 - wrapThresh))
-              : prevY + portion * (thresh * (1 - wrapThresh)),
-          X: level * xGap
+        var level = 1;
+        var levels = [];
+        var wrapGap = 0.75;
+        // var yAdjust = threshold - y.invert(strokeWidth*2);
+        //ISAAC CAN YOU CHECK THIS PART?
+        // var yAdjust = thresh - y.invert(strokeWidth) + 10;
+        // var barCount = 0;
+        var yAdjust = 0 ;
+        var data = values.map(function(d, i) {
+            if (d <= thresh) {
+                var p = [{ Y: 0, X: level}, { Y: d, X: level}];
+                levels.push(level);
+                level += 1;
+                // barCount += 1;
+                return p;
+            } else {
+                var points = [];
+                var numWrap = 1;
+                if (wrapThresh !== 0 && wrapThresh !== 1) {
+                    numWrap = (d - thresh) / ((1 - wrapThresh) * thresh);
+                } else {
+                    numWrap = d / thresh - 1;
+                }
+                var portion = numWrap % 1;
+                // barCount += parseInt(numWrap);
+                // barCount += 2;
+                points.push({ Y: 0, X: level });
+                levels.push(level);
+                var l;
+                for (l = 0; l <= numWrap; l++) {
+
+                    if (l % 2 === 0) {
+                        points.push({ Y: thresh, X: level });
+                        level += wrapGap;
+                        if (l<numWrap){
+                            points.push({ Y: thresh, X: level});
+                        } else {
+                            if (portion > 0){
+                                points.push({ Y: thresh, X: level});
+                            }
+                        }
+                    } else {
+                        points.push({ Y: thresh * wrapThresh, X: level});
+                        level += wrapGap;
+                        if (l<numWrap){
+                            points.push({ Y: thresh * wrapThresh, X: level});
+                        } else {
+                            if (portion > 0){
+                                points.push({ Y: thresh * wrapThresh, X: level});
+                            }
+                        }
+
+                    }
+                }
+
+                if (portion > 0){
+                    var prevY = points[points.length - 1].Y;
+
+                    points.push({
+                        Y:
+                            parseInt(numWrap) % 2 === 0
+                                ? prevY - portion * (thresh * (1 - wrapThresh))
+                                : prevY + portion * (thresh * (1 - wrapThresh)),
+                        X: level
+                    });
+                }
+//                    console.log(portion);
+
+
+                level += 1;
+                return points;
+            }
         });
-        level += 1;
-        return points;
-      }
-    });
 
-    //        console.log(width - level*xGap);
+        strokeGap = width/level;
+        strokeWidth = strokeGap/2;
+        xGap =  strokeGap/2;
 
-    return { lines: data, level: level, tickLevels: levels };
-  }
+        return {lines:data,level:level,tickLevels:levels};
+
+    }
 }
