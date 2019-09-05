@@ -26,6 +26,14 @@
         cursor: pointer;
     }
 
+    #highestchoice {
+        stroke: #367665 !important;
+    }
+
+    #lowestchoice {
+        stroke:#6ab57d !important;
+    }
+
     html, body{
         width:100%;
         height:100%
@@ -56,12 +64,12 @@
     align-items: center;
     }
     #chart{
-        height:50%;
+        height:47%;
         width: 80%;
 
     }
     #questions{
-        height:42%;
+        height:45%;
         width: 100%;
 
         overflow: auto;
@@ -154,21 +162,28 @@
     ];
 
 
-
+    var choicesIndex = [];
     var currentIndex = 0;
     var current = forms[currentIndex];
     var index = 0;
+    var choiceIndex;
     user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
     user_data[index.toString()]["times"].push(Date.now());
     var data;
 
-    d3.json("data.json").then(function(d){
-       data = d;
-        values = data[index]["values"];
+    d3.json("finalDataset.json").then(function(d){
+       data = shuffle(d);
+       values = data[index]["values"];
+       var threshold;
+        if (data[index]["type"] === "wrap"){
+            threshold = math.quantileSeq(values,0.75);
+            threshold = Math.round(threshold/100)*100;
 
-        var threshold = math.quantileSeq(values,0.75);
-        threshold = Math.round(threshold/100)*100;
+        } else if(data[index]["type"]==="standard") {
+            threshold = math.ceil(d3.max(values)/100)*100
+        }
         Bar(values,threshold);
+
     });
 
 
@@ -177,8 +192,9 @@
         $("#barChartTitle").text("barchart " + index);
 
         currentIndex = 0;
-        current = forms[currentIndex]
-        user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
+        current = forms[currentIndex];
+        user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[],"dataset_id":data[index]["dataset_id"],"startTime":Date.now()};
+        console.log(user_data);
         var barChart = new wrappedBarChart(values,threshold);
 
         addClickListener();
@@ -187,6 +203,16 @@
     function addClickListener(){
         $("#"+current+"Submit").click(function(event){
             event.preventDefault();
+            lines.attr("id",function(d,i){
+                var currentID = d3.select(this).attr("id");
+                console.log(currentID);
+                if ( currentID){
+                    return currentID
+                }
+                else if (i === choiceIndex){
+                    return current + "choice";
+                }
+            });
 //            if (index===0){
 //                user_data["firstBar"]["times"].push(Date.now());
 //            } else {
@@ -206,7 +232,7 @@
                     var questions    = $('#questions');
                     var height = questions[0].scrollHeight;
                     questions.scrollTop(height);
-
+//                    choicesIndex.push(focusIndex);
                     addClickListener();
                 } else{
                     alert("Please enter or select a value");
@@ -225,7 +251,7 @@
                                 $("#"+d+"Form").css("display","none");
                             }
                         });
-
+                        user_data[index.toString()]["endTime"] = Date.now();
                         $("#chart").empty();
                         index += 1;
                         $("button").prop("disabled",false).attr("class","btn btn-primary").text("Submit");
@@ -233,9 +259,14 @@
 
 
                         values = data[index]["values"];
-                        user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
-                        var threshold = math.quantileSeq(values,0.75);
-                        threshold = Math.round(threshold/100)*100;
+                        var threshold;
+                        if (data[index]["type"] === "wrap"){
+                            threshold = math.quantileSeq(values,0.75);
+                            threshold = Math.round(threshold/100)*100;
+
+                        } else if(data[index]["type"]==="standard") {
+                            threshold = math.ceil(d3.max(values)/100)*100
+                        }
                         Bar(values,threshold);
 
                     } else {
@@ -255,6 +286,17 @@
                 }
             } 
         })
+    }
+
+    function shuffle(a) {
+        var j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+        return a;
     }
 
 </script>

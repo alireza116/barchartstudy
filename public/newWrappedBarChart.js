@@ -1,10 +1,13 @@
+var focusCat;
+var focusIndex;
+var lines;
 function wrappedBarChart(values,threshold) {
     console.log(values);
     var pageWidth = document.querySelector("#main").offsetWidth;
-    var margin = { top: 20, right: 50, bottom: 100, left: 50 },
-        // width = pageWidth - margin.left - margin.right - 100,
-        width = $("#chart").width() - margin.left - margin.right;
+    var margin = { top: 20, right: 50, bottom: 30, left: 50 },
+    width = $("#chart").width() - margin.left - margin.right,
     height = $("#chart").height() - margin.top - margin.bottom;
+
 
     // Bar Chart Variables
     var strokeWidth = 5;
@@ -29,7 +32,8 @@ function wrappedBarChart(values,threshold) {
     var xValue;
     var yValue;
     var focus;
-    var focusCat;
+    // var focusCat;
+    // var focusIndex;
     var alphabet = "abcdefghijklmnopqrstuwxyz";
     console.log(values);
     var labels = values.map(function(v,i){
@@ -90,7 +94,7 @@ function wrappedBarChart(values,threshold) {
         .call(d3.axisLeft(y).tickSize(-width))
         .style("font-size", "0.7m");
         // bar charts
-        var lines = svg.append("g")
+        lines = svg.append("g")
             .selectAll("path")
             .data(data.lines)
             .enter()
@@ -193,7 +197,9 @@ function wrappedBarChart(values,threshold) {
             .on("click", function() {
                 // console.log(current);
                 d3.select("#" + current).property("value", focusCat);
+                choiceIndex = focusIndex;
                 $("#" + current).val(focusCat);
+
             })
             .on("mouseover", function() {
                 focus.attr("stroke-opacity", 0.5);
@@ -227,6 +233,7 @@ function wrappedBarChart(values,threshold) {
         focus.attr("transform", "translate(" + x(tickPos[xI]) + "," + 0 + ")");
 
         focusCat = labels[xI];
+        focusIndex = xI;
 
         xAxis.selectAll("text").style("fill", function(d, i) {
             if (i === xI) {
