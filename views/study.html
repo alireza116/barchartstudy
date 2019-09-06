@@ -247,7 +247,8 @@
                     if (index <data.length-1){
 //                      if (index < 5)  {
                         forms.forEach(function(d){
-                            user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
+                            var val = $("#"+d).val();
+                            user_data[index.toString()]["answers"].push([d,val,labels.indexOf(val)]);
                         });
 
 
@@ -276,7 +277,8 @@
                         Bar(values,threshold);
                     } else {
                         forms.forEach(function(d){
-                            user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
+                            var val = $("#"+d).val();
+                            user_data[index.toString()]["answers"].push([d,val,labels.indexOf(val)]);
                         });
                         user_data["endTime"] = Date.now();
                         console.log(user_data);

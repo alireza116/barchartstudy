@@ -1,6 +1,7 @@
 var focusCat;
 var focusIndex;
 var lines;
+var labels;
 function wrappedBarChart(values,threshold) {
     console.log(values);
     var pageWidth = document.querySelector("#main").offsetWidth;
@@ -36,7 +37,7 @@ function wrappedBarChart(values,threshold) {
     // var focusIndex;
     var alphabet = "abcdefghijklmnopqrstuwxyz";
     // console.log(values);
-    var labels = values.map(function(v,i){
+    labels = values.map(function(v,i){
         return alphabet[i].toUpperCase();
     });
 
@@ -216,7 +217,7 @@ function wrappedBarChart(values,threshold) {
         var m = d3.mouse(this);
         // console.log(data);
         if (Date.now() - prevTime > 250) {
-            user_data[index.toString()]["mousePositions"].push([current, m]);
+            // user_data[index.toString()]["mousePositions"].push([current, m]);
             prevTime = Date.now();
         }
 
