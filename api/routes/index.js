@@ -38,7 +38,8 @@ const responseSchema = new Schema({
   group: Number,
   startTime: Number,
   endTime: Number,
-  responses: Schema.Types.Mixed
+  responses: Schema.Types.Mixed,
+  postquestions: Schema.Types.Mixed
 });
 
 function getRandomInt(max) {
@@ -83,6 +84,24 @@ router.get("/api/consent", function(req, res) {
   }
 });
 
+router.post("/api/post", function(req, res) {
+    let token = req.session.userid;
+    let data = req.body;
+    // console.log(data);
+    Response.findOneAndUpdate(
+        { usertoken: token, postquestions: { $exists: false } },
+        {
+            postquestions: data
+        },
+        function(err, doc) {
+            if (err) return res.send(500, { error: err });
+            console.log("yeaah");
+            return res.send("successfully saved!");
+        }
+    );
+});
+
+
 router.post("/api/study", function(req, res) {
   let token = req.session.userid;
   let data = req.body.data;
@@ -125,6 +144,10 @@ router.get("/study", function(req, res) {
   } else {
     res.render("study.html");
   }
+});
+
+router.get("/post",function(req,res){
+res.render("postquestion.html");
 });
 
 router.get("/debrief", function(req, res) {
