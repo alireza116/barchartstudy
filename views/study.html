@@ -83,6 +83,9 @@
         text-align: center;
         font-size:3em;
     }
+    .axis{
+        font: 25px sans-serif !important;
+    }
         button.btn{
             margin-top: 5px;
         }
@@ -221,7 +224,9 @@
 
             user_data[index.toString()]["times"].push(Date.now());
 
-            if (currentIndex < forms.length-1) {
+            if (currentIndex < forms.length-1)
+
+            {
                 if ($('#'+current).val() !== ""){
                     $('#'+current+"Submit").prop('disabled', true).attr('class',"btn btn-default").text("Done!");
                     currentIndex +=1;
@@ -240,6 +245,7 @@
             } else {
                 if ($('#'+current).val() !== ""){
                     if (index <data.length-1){
+//                      if (index < 5)  {
                         forms.forEach(function(d){
                             user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
                         });
@@ -268,12 +274,12 @@
                             threshold = math.ceil(d3.max(values)/100)*100
                         }
                         Bar(values,threshold);
-
                     } else {
                         forms.forEach(function(d){
                             user_data[index.toString()]["answers"].push([d,$("#"+d).val()]);
                         });
                         user_data["endTime"] = Date.now();
+                        console.log(user_data);
                         $.post("/api/study",{data:user_data},success=function(result){
                         console.log(result);
                         window.location.assign("/debrief");
