@@ -164,7 +164,7 @@ function wrappedBarChart(values,threshold) {
             .append("g")
             .attr("transform", "translate(" + width + ", 0 )")
             .attr("stroke","grey")
-            .call(d3.axisLeft(helpScale));
+            .call(d3.axisLeft(helpScale))
             .attr("display", "none");
 
         helpAxis.selectAll("text").attr("transform", "translate(40,0)");

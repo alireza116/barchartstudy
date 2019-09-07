@@ -151,6 +151,7 @@ res.render("postquestion.html");
 });
 
 router.get("/debrief", function(req, res) {
+
   res.render("debrief.html");
 });
 
