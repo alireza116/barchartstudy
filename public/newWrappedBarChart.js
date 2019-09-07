@@ -156,11 +156,15 @@ function wrappedBarChart(values,threshold) {
             // .attr("transform", "rotate(-65)");
 
         // helper axis to show wrapping area
-
+        console.log("ticks");
+        console.log(y.ticks().reverse());
+        var helpScale = d3.scaleLinear().range([height, 0]);
+        helpScale.domain([threshold,0]);
         var helpAxis = svg
             .append("g")
             .attr("transform", "translate(" + width + ", 0 )")
-            .call(d3.axisLeft(help).tickValues([wrapThresh * threshold, threshold]))
+            .attr("stroke","grey")
+            .call(d3.axisLeft(helpScale));
             .attr("display", "none");
 
         helpAxis.selectAll("text").attr("transform", "translate(40,0)");
