@@ -83,34 +83,38 @@
 </head>
 <body>
 
-<div class="container" style="width:100%; margin: 0 auto" id="main">
+<div class="container bg-light" style="width:100%; height:100%; overflow:auto; margin: 0 auto;padding:40px;" id="main">
 <h1>Instructions</h1>
 <h2>Please read these instructions carefully</h2>
 <p>
 In this study, we will show you two types of bar chart and ask you to answer specific questions. <br>
-The first type is a standard bar chart, one with every bar corresponding to a value about a category. The taller the bar, the higher the value. <br>
+The first type is a <strong>standard bar chart</strong>, one with every bar corresponding to a value about a category. The taller the bar, the higher the value. <br>
 <img src="standard.JPG"  width="100%">
-The second type is a modified version. We call it a wrapped bar chart. The way wrapped bar charts work is that bars taller than a certain threshold will wrap around themselves. <br>
+    <hr>
+The second type is a modified version. We call it a <strong>wrapped bar chart</strong>. The way wrapped bar charts work is that bars taller than a certain threshold will wrap around themselves. <br>
 For example, a bar having a value of 5000 will wrap 5 times if the threshold is a 1000.<br>
 <strong>The horizontal parts of the wrapped bar charts do not count towards the total value of the bar</strong>. So you can simply estimate the total value of a wrapped bar by counting the number of times a bar has wrapped and multiplying by the threshold.  The image below shows how it works.<br>
 <img src="wrappednew.JPG" width="100%">
+    <hr>
 <form>
             <fieldset class="form-group" id="test" >
                 <label for="understanding" >What is the value of the first bar ( on the left )?</label>
                 <input type="number" class="form-control" min=1 id="understanding" name="understanding" aria-describedby="emailHelp" placeholder="Input a Number">
             </fieldset>
 </form>
-
+    <hr>
 In this study, we will ask you to use these two types of bar chart to answer questions about two datasets. <br> <br>
 The questions we ask are of two types: <br>
 <ul>
-<li>To find specific bars, such as the one with the highest and the lowest value]</li>
+<li>To find bars with the largest and smallest values</li>
 <li>And to compare the two bars in terms of ratio of highest to lowest. </li>
 </ul>
-For example, we will ask you how many times is the value of the tallest bar to the shortest bar. <br>
-For example, if a bar has a value of 5000 and another has a value of 500, the taller bar is 10 times the value of the shorter bar. <br>
-We are asking you to estimate, so please do your best. <br>
-When you are ready, please click continue. The study will take you through two bar charts! <br>
+For example, we will ask you how many times is the value of the largest bar to the smallest bar. (that is the ratio between them) <br>
+For example, if a bar has a value of 5000 and another has a value of 500, the taller bar is 10 times the value of the shorter bar.
+    <hr>
+We are asking you to give us your best estimates, so please do your best. <br>
+When you are ready, please click continue. <br>
+    The study will take you through different data sets with the two bar charts! <br>
 </p>
 
 <button type="submit" class="btn btn-primary" id="continue">Continue</button>

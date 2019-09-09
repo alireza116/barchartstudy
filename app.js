@@ -11,8 +11,8 @@ var bodyparser = require("body-parser");
 app.set("views", __dirname + "/views");
 app.engine("html", require("ejs").renderFile);
 
-app.use(bodyparser({limit: '50mb'}));
-app.use(bodyparser.json());
+
+app.use(bodyparser.json({limit: '5mb'}));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
