@@ -70,6 +70,7 @@ router.get("/api/consent", function(req, res) {
     console.log(group);
     req.session.userid = token;
     req.session.group = group;
+    req.session.completed = false;
     let newResponse = new Response({
       usertoken: token,
       group: group

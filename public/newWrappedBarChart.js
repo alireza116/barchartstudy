@@ -92,9 +92,10 @@ function wrappedBarChart(values,threshold) {
 
     yAxis = svg
         .append("g")
-        .call(d3.axisLeft(y).tickSize(-width))
+        .call(d3.axisLeft(y).tickSize(-10))
         .attr("class", "axis");
         // bar charts
+    yAxis.selectAll(".tick").selectAll("line").attr("x2",width);
         lines = svg.append("g")
             .selectAll("path")
             .data(data.lines)

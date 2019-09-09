@@ -107,20 +107,30 @@ In this study, we will ask you to use these two types of bar chart to answer que
 The questions we ask are of two types: <br>
 <ul>
 <li>To find bars with the largest and smallest values</li>
-<li>And to compare the two bars in terms of ratio of highest to lowest. </li>
+<li>And to compare the two bars in terms of ratio of largest to smallest. </li>
 </ul>
 For example, we will ask you how many times is the value of the largest bar to the smallest bar. (that is the ratio between them) <br>
 For example, if a bar has a value of 5000 and another has a value of 500, the taller bar is 10 times the value of the shorter bar.
     <hr>
 We are asking you to give us your best estimates, so please do your best. <br>
 When you are ready, please click continue. <br>
-    The study will take you through different data sets with the two bar charts! <br>
+    The study will take you through <strong>26</strong> different data sets with the two types of bar charts! <br>
 </p>
 
 <button type="submit" class="btn btn-primary" id="continue">Continue</button>
 
 </div>
 <script>
+
+    $(document).ready(function() {
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+
         $("#continue").click(function(event){
             event.preventDefault();
             var value = +$("#understanding").val()
