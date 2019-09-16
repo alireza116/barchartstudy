@@ -269,6 +269,9 @@
         if (!(+data[1]["value"] >= 18 && +data[1]["value"] < 99)) {
             alert("you need to be older than 18 years old and less than 99 years to continue this study")
         }
+        else if (data.some(function(d){return d["value"]===""})){
+            alert("please write comments in the comment box.")
+        }
         else if (data.length === 8) {
             $.post("/api/post",data=data,
                 success=function(d){

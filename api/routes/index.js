@@ -61,6 +61,7 @@ router.get("/api/userinfo", function(req, res) {
   }
 });
 
+
 router.get("/api/consent", function(req, res) {
   // 0 is for normal first then wrapped, 1 is vice versa
 
