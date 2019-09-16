@@ -46,7 +46,8 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-const Response = mongoose.model("newWrapBarChart", responseSchema);
+
+const Response = mongoose.model("newWrapBarChartInLab", responseSchema);
 
 router.get("/api/userinfo", function(req, res) {
   console.log(req.session.userid);

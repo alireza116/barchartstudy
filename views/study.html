@@ -10,6 +10,7 @@
             integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.0/math.js"></script>
+    <script src="saveSvgAsPng.js"></script>
     <!--<script src="https://unpkg.com/d3-simple-slider"></script>-->
     <style> /* set the CSS */
 
@@ -140,6 +141,11 @@
                 <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
             </fieldset>
+            <fieldset class="form-group" id="commentForm" style="display: none">
+                <label for="comment">Any comment about this specific chart? Any special strategies you found answers? any issues? if not just click submit!</label>
+                <textarea class="form-control" id="comment" rows="3" ></textarea>
+                <button type="submit" class="btn btn-primary" id="commentSubmit">Submit</button>
+            </fieldset>
         </form>
     </div>
 </div>
@@ -154,7 +160,8 @@
     var forms = [
         "highest",
         "lowest",
-        "firstPercentage"
+        "firstPercentage",
+        "comment"
     ];
 
     var questions = [
@@ -170,6 +177,7 @@
     var current = forms[currentIndex];
     var index = 0;
     var choiceIndex;
+    var datasetName;
     user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[]};
     user_data[index.toString()]["times"].push(Date.now());
     var data;
@@ -197,9 +205,11 @@
         currentIndex = 0;
         current = forms[currentIndex];
         user_data[index.toString()] = {"answers":[],"times":[],"mousePositions":[],"dataset_id":data[index]["dataset_id"],"startTime":Date.now()};
+
         console.log(user_data);
         var barChart = new wrappedBarChart(values,threshold);
-
+//        saveSvg(document.querySelector("svg"),data[index]["dataset_id"]+".svg");
+//        saveSvgAsPng(document.querySelector("svg"), data[index]["dataset_id"]+".png");
         addClickListener();
     }
 
@@ -243,7 +253,7 @@
                     alert("Please enter or select a value");
                 }
             } else {
-                if ($('#'+current).val() !== ""){
+                if ($('#'+current).val() !== "" || current === 'comment'){
                     if (index <data.length-1){
 //                      if (index < 5)  {
                         forms.forEach(function(d){
@@ -307,6 +317,19 @@
         return a;
     }
 
+    function saveSvg(svgEl, name) {
+        svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        var svgData = svgEl.outerHTML;
+        var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+        var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+        var svgUrl = URL.createObjectURL(svgBlob);
+        var downloadLink = document.createElement("a");
+        downloadLink.href = svgUrl;
+        downloadLink.download = name;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
 </script>
 <script src="newWrappedBarChart.js"></script>
 </body>
