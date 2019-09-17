@@ -141,11 +141,11 @@
                 <input type="number" class="form-control" min=1 id="firstPercentage" name="firstPercentage" aria-describedby="emailHelp" placeholder="Input a Number">
                 <button type="submit" class="btn btn-primary" id="firstPercentageSubmit">Submit</button>
             </fieldset>
-            <fieldset class="form-group" id="commentForm" style="display: none">
-                <label for="comment">Any comment about this specific chart? Any special strategies you developed for answering the questions? (optional question)</label>
-                <textarea class="form-control" id="comment" rows="3" ></textarea>
-                <button type="submit" class="btn btn-primary" id="commentSubmit">Submit</button>
-            </fieldset>
+            <!--<fieldset class="form-group" id="commentForm" style="display: none">-->
+                <!--<label for="comment">Any comment about this specific chart? Any special strategies you developed for answering the questions? (optional question)</label>-->
+                <!--<textarea class="form-control" id="comment" rows="3" ></textarea>-->
+                <!--<button type="submit" class="btn btn-primary" id="commentSubmit">Submit</button>-->
+            <!--</fieldset>-->
         </form>
     </div>
 </div>
@@ -160,8 +160,7 @@
     var forms = [
         "highest",
         "lowest",
-        "firstPercentage",
-        "comment"
+        "firstPercentage"
     ];
 
     var questions = [
@@ -182,11 +181,13 @@
     user_data[index.toString()]["times"].push(Date.now());
     var data;
 
-    d3.json("finalDataset.json").then(function(d){
+    d3.json("finalDatasetNew.json").then(function(d){
        data = shuffle(d);
+//       print(data);
+       console.log(data);
        values = data[index]["values"];
        var threshold;
-        if (data[index]["type"] === "wrap"){
+        if (data[index]["type"] === "wrapped"){
             threshold = math.quantileSeq(values,0.75);
             threshold = Math.round(threshold/100)*100;
 
@@ -226,11 +227,6 @@
                     return current + "choice";
                 }
             });
-//            if (index===0){
-//                user_data["firstBar"]["times"].push(Date.now());
-//            } else {
-//                user_data["secondBar"]["times"].push(Date.now());
-//            }
 
             user_data[index.toString()]["times"].push(Date.now());
 
@@ -277,7 +273,7 @@
 
                         values = data[index]["values"];
                         var threshold;
-                        if (data[index]["type"] === "wrap"){
+                        if (data[index]["type"] === "wrapped"){
                             threshold = math.quantileSeq(values,0.75);
                             threshold = Math.round(threshold/100)*100;
 
@@ -317,19 +313,19 @@
         return a;
     }
 
-    function saveSvg(svgEl, name) {
-        svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        var svgData = svgEl.outerHTML;
-        var preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
-        var svgUrl = URL.createObjectURL(svgBlob);
-        var downloadLink = document.createElement("a");
-        downloadLink.href = svgUrl;
-        downloadLink.download = name;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
+//    function saveSvg(svgEl, name) {
+//        svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+//        var svgData = svgEl.outerHTML;
+//        var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+//        var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+//        var svgUrl = URL.createObjectURL(svgBlob);
+//        var downloadLink = document.createElement("a");
+//        downloadLink.href = svgUrl;
+//        downloadLink.download = name;
+//        document.body.appendChild(downloadLink);
+//        downloadLink.click();
+//        document.body.removeChild(downloadLink);
+//    }
 </script>
 <script src="newWrappedBarChart.js"></script>
 </body>

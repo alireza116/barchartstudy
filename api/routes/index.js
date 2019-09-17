@@ -47,7 +47,7 @@ function getRandomInt(max) {
 }
 
 
-const Response = mongoose.model("newWrapBarChartInLab", responseSchema);
+const Response = mongoose.model("WrapBarChart2", responseSchema);
 
 router.get("/api/userinfo", function(req, res) {
   console.log(req.session.userid);
@@ -86,6 +86,7 @@ router.get("/api/consent", function(req, res) {
     res.send("consent already given");
   }
 });
+
 
 router.post("/api/post", function(req, res) {
     let token = req.session.userid;
