@@ -157,8 +157,8 @@ function wrappedBarChart(values,threshold) {
             // .attr("transform", "rotate(-65)");
 
         // helper axis to show wrapping area
-        console.log("ticks");
-        console.log(y.ticks().reverse());
+        // console.log("ticks");
+        // console.log(y.ticks().reverse());
         var helpScale = d3.scaleLinear().range([height, 0]);
         helpScale.domain([threshold,0]);
         var helpAxis = svg
