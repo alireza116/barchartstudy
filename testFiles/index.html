@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wrapped</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <style> /* set the CSS */
+
+    .line {
+        fill: none;
+        /*stroke: steelblue;*/
+        /*stroke-width: 100;*/
+        stroke-linejoin: round;
+        /*stroke-width: 10px;*/
+    }
+
+        html, body{
+            width:100%;
+            height:100%
+        }
+
+    </style>
+</head>
+<body>
+<div id="chart"></div>
+<div id="thresh">
+    <p>Bar Chart Threshold</p>
+</div>
+<div id="wrap">
+    <p>Wrap Threshold</p>
+</div>
+<script>
+
+
+
+    var values = [3000,1750, 500, 2300 , 300 , 800,50,150];
+    values = values.sort(function(a,b){
+        return b-a
+    });
+    var labels = ["a","b","c","d","E","f","GG","Hh"];
+
+    var yGap = 40;
+    var threshold = 1500;
+    var wrapThresh = 0.3;
+    var strokeWidth = 7;
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = 960 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
+
+
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+    var help = d3.scaleLinear().range([wrapThresh* width,width]).domain([(wrapThresh* threshold),threshold])
+
+
+    var valueline = d3.line()
+        .x(function(d) { return x(d.X); })
+        .y(function(d) { return y(d.Y); });
+
+    var color = d3.scaleLinear().range(["teal","red"]).domain(d3.extent(values));
+
+    var svg = d3.select("#chart").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+    var data = prepareData(values,threshold,wrapThresh);
+
+    x.domain([0,threshold]);
+
+    y.domain([0,data.level* yGap]);
+
+
+    var lines = svg.selectAll("path").data(data.lines).enter().append("path")
+        .attr("class", "line")
+        .attr("stroke-width",strokeWidth)
+        .attr("stroke",function(d,i){
+            console.log(color(values[i]));
+            return color(values[i])
+        })
+        .attr("d", valueline);
+
+
+    var xAxis = svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add the Y Axis
+//    console.log(data.tickLevels);
+    var yAxis = svg.append("g")
+        .call(d3.axisLeft(y).tickValues(data.tickLevels).tickFormat(function(d,i){
+            return labels[i];
+        }));
+
+    var helpAxis = svg.append("g")
+//        .attr("transform", "translate(" + - width/2+ ", 0 )")
+        .call(
+        d3.axisBottom(help).tickValues([wrapThresh*threshold,threshold])
+    );
+    var helpTranslate = (wrapThresh * width) + (width - wrapThresh*width)/2 ;
+
+    var helpAxisRange = svg.append("text")
+        .attr("transform","translate("+helpTranslate+",-5)")
+        .text(threshold - (wrapThresh*threshold));
+
+    var sliderSimple = d3
+        .sliderBottom()
+        .min(100)
+        .max(6000)
+        .width(300)
+        .tickFormat(d3.format('~s'))
+        .step(50)
+        .ticks(5)
+        .default(threshold)
+        .on('onchange', function(val){
+            threshold = val;
+            var data = prepareData(values,threshold,wrapThresh);
+            x.domain([0,threshold]);
+            y.domain([0,data.level* yGap]);
+            help.range([wrapThresh*width,width]).domain([(wrapThresh* threshold),threshold]);
+
+            var helpTranslate = (wrapThresh * width) + (width - wrapThresh*width)/2 ;
+            helpAxisRange
+                .attr("transform","translate("+helpTranslate+",-5)")
+                .text(parseInt(threshold - (wrapThresh*threshold)));
+
+            xAxis.call(d3.axisBottom(x));
+            helpAxis.call(
+                d3.axisBottom(help).tickValues([wrapThresh*threshold,threshold])
+            );
+            // Add the Y Axis
+            yAxis.call(d3.axisLeft(y).tickValues(data.tickLevels).tickFormat(function(d,i){
+                return labels[i];
+            }));
+
+
+            lines.data(data.lines).attr("d", valueline).attr("stroke-width",strokeWidth);
+        });
+
+
+
+    var sliderSimple2 = d3
+        .sliderBottom()
+        .min(0)
+        .max(0.95)
+        .width(300)
+        .step(0.05)
+        .tickFormat(d3.format('.2f'))
+        .ticks(5)
+        .default(wrapThresh)
+        .on('onchange', function(val){
+            wrapThresh = val;
+            var data = prepareData(values,threshold,wrapThresh);
+            x.domain([0,threshold]);
+            y.domain([0,data.level* yGap]);
+            xAxis.call(d3.axisBottom(x));
+
+            help.range([wrapThresh*width,width]).domain([(wrapThresh* threshold),threshold]);
+
+            var helpTranslate = (wrapThresh * width) + (width - wrapThresh*width)/2 ;
+
+            helpAxisRange
+                .attr("transform","translate("+helpTranslate+",-5)")
+                .text(parseInt(threshold - (wrapThresh*threshold)));
+
+            helpAxis.call(
+                d3.axisBottom(help).tickValues([wrapThresh*threshold,threshold])
+            );
+
+            // Add the Y Axis
+            yAxis.call(d3.axisLeft(y).tickValues(data.tickLevels).tickFormat(function(d,i){
+                return labels[i];
+            }));
+            lines.data(data.lines).attr("d", valueline).attr("stroke-width",strokeWidth);
+        });
+
+    var gSimple = d3
+        .select('#thresh')
+        .append('svg')
+        .attr('width', 500)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
+
+    gSimple.call(sliderSimple);
+
+    var gSimple2 = d3
+        .select('#wrap')
+        .append('svg')
+        .attr('width', 500)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
+
+    gSimple2.call(sliderSimple2);
+
+
+    function prepareData(values,thresh,wrapThresh) {
+        var level = 1;
+        var levels = [];
+        var barCount = 0;
+        var data = values.map(function(d,i){
+            if (d < thresh){
+//                console.log(level);
+                var p = [{X:0,Y:level*yGap},{X:d,Y:level*yGap}];
+                levels.push(level*yGap);
+                level += 1;
+                barCount += 1;
+//                console.log(level);
+                return p
+            } else {
+                var points = [];
+                var numWrap;
+                if (wrapThresh !== 0 & wrapThresh !== 1){
+                    numWrap = (d-thresh)/(((1-wrapThresh)*thresh));
+                } else {
+                    numWrap = d / thresh;
+                }
+                barCount += parseInt(numWrap);
+                barCount += 2;
+//                console.log(numWrap);
+//                level += 1;
+                points.push(
+                    {X:0,Y:level*yGap}
+                );
+                levels.push(level*yGap);
+                var l;
+                for (l = 0; l < numWrap; l++){
+
+                    if (l % 2 ===0) {
+
+                        points.push(
+                            {X:thresh,Y:level*yGap}
+                        );
+                        level += 0.3;
+                        points.push(
+                            {X:thresh,Y:level*yGap}
+                        )
+
+                    }
+                    else {
+//                        points.push(
+//                            {X:thresh,Y:level*yGap}
+//                        );
+                        points.push(
+                            {X:thresh*wrapThresh,Y:level*yGap}
+                        );
+                        level += 0.3;
+                        points.push(
+                            {X:thresh*wrapThresh,Y:level*yGap}
+                        )
+                    }
+//                    console.log(level);
+
+                }
+
+
+                var portion = numWrap % 1;
+                var prevX = points[points.length-1].X;
+                console.log(numWrap);
+//                points.push({X:(portion/thresh)*thresh,Y:level*yGap});
+                points.push({X: (parseInt(numWrap) % 2 ===0) ? prevX - (portion * (thresh*(1-wrapThresh))) : prevX + (portion * (thresh*(1-wrapThresh))),Y:level*yGap})
+                level +=1;
+                return points;
+            }
+
+        });
+
+        var totalGapWidth =   level * yGap;
+
+        var totalBarWidth =  barCount * strokeWidth + (level - values.length) *yGap;
+        var total = totalGapWidth;
+        var chartHeight = height - margin.top - margin.bottom  ;
+        console.log("level " + barCount);
+        console.log("total bar height " + totalBarWidth );
+        console.log("total chart height" + total);
+//        var prevStrokeWidth = strokeWidth;
+        if (totalBarWidth > totalGapWidth){
+            while (totalBarWidth + 100> totalGapWidth && strokeWidth > 0.01) {
+                strokeWidth = strokeWidth - 1;
+                totalBarWidth = barCount * strokeWidth + (level - values.length) *yGap;
+                total = totalGapWidth + totalBarWidth;
+                console.log("level " + barCount);
+                console.log("total bar height " + totalBarWidth );
+                console.log("total chart height" + total);
+            }
+        }
+
+
+        return {lines:data,level:level,tickLevels:levels};
+
+    }
+
+
+
+</script>
+</body>
+</html>

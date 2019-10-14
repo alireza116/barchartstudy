@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.0/math.js"></script>
+    <script src="saveSvgAsPng.js"></script>
+    <title>new wrapped bar chart</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .line {
+            fill: none;
+            /*stroke: steelblue;*/
+            /*stroke-width: 100;*/
+
+            stroke-linejoin: round;
+            /*stroke-linecap: square;*/
+            /*stroke-width: 10px;*/
+        }
+
+        /*.line path{}*/
+
+        html, body{
+            width:100%;
+            height:100%;
+            margin: 0;
+        }
+
+        .axis{
+            font: 25px sans-serif;
+        }
+        #chart1,#chart2,#chart3{
+            width:60%;
+            height:50%;
+            /*margin: 50px;*/
+            margin: 0 auto;
+            padding:20px;
+
+        }
+    </style>
+</head>
+<body>
+<div id="information">q1  <span id="q1"></span>, q3 <span id="q3"></span>, entropy <span id="entropy"></span>, hspread <span id="hspread"></span>, threshold <span id="threshold"></span></div>
+<div id="chart1"></div>
+<div id="chart2"></div>
+<div id="chart3"></div>
+<script src="newWrappedBarChart.js"></script>
+<script>
+    var dIndex = 0;
+    var step = 0;
+    var data;
+//    d3.json("data.json").then(function(data){
+////        console.log(data);
+//        data.sort(function(a,b){
+//            return   parseFloat(a["hspread"]) - parseFloat(b["hspread"]);
+//        });
+//
+//        $(document).keypress(function(event){
+//            event.preventDefault();
+//            if (event.keyCode === 120){
+//                d3.selectAll("svg").remove();
+//
+//                var values = data[dIndex]["values"];
+////                var q3 = d3.quantile(values,0.75);
+////                var q1 = d3.quantile(values,0.25);
+//                var q3 = math.quantileSeq(values,0.75);
+//                var q1 = math.quantileSeq(values,0.25);
+//                var iqr = q3 - q1;
+////                threshold = step * iqr + q3;
+//                var threshold = q3;
+//                threshold = Math.round(threshold/100)*100;
+//                console.log("q3");
+//                console.log(q3);
+//                console.log("q1");
+//                console.log(q1);
+//                $("#q1").text(q1);
+//                $("#q3").text(q3);
+//                $("#entropy").text(data[dIndex]["enorm"]);
+//                $("#hspread").text(data[dIndex]["hspread"]);
+//                $("#threshold").text(threshold);
+////                var threshold = d3.min(values) * 20;
+//                wrappedBarChart(values,threshold,"chart1");
+//                wrappedBarChart(values,math.ceil(d3.max(values)/100)*100,"chart2");
+//
+////                alert(data[dIndex]["enorm"] + " " + data[dIndex]["hspread"]);
+//                dIndex +=1;
+//            }
+//        })
+//    }
+
+
+    wrappedBarChart([8500,700,800,100,500,3250,270,50,75,1000,3700],8500,0,"chart1");
+    saveSvgAsPng(document.querySelector("#chart1 svg"), "chart1"+".png");
+    wrappedBarChart([8500,700,800,100,500,3250,270,50,75,1000,3700],1000,0,"chart2");
+    saveSvgAsPng(document.querySelector("#chart2 svg"), "chart1"+".png");
+    wrappedBarChart([8500,700,800,100,500,3250,270,50,75,1000,3700],1000,0.5,"chart3");
+    saveSvgAsPng(document.querySelector("#chart3 svg"), "chart1"+".png");
+</script>
+</body>
+</html>
