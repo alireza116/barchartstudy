@@ -8,12 +8,11 @@
     <script src="js/d3-simple-slider.js"></script>
     <script src="js/lodash.core.min-4.17.15.js"></script>
     <script src="js/herokuWrappedBarChart.js"></script>
+    <script src="js/saveSvgAsPng.js"></script>
     <script src="js/base.js"></script>
-    <script src="js/saveSvgAsPng.js"></script>  
-    <script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
+    <script  src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet"
             href="css/bootstrap.min.css-4.1.3.css"
@@ -23,32 +22,38 @@
     <link rel="stylesheet" href="css/index.css"/>
 </head>
 <body>
-<h1>Wrapped Bar Chart</h1>
+<div id="parallelogram">
+    <div class="parallelogram-background">
+        <h1 class="header">Wrapped Bar Chart</h1>
+    </div>
+</div>
 <div class="control">
-    <div class="file-selection">
-        <input type="file" id="files" name="files[]" multiple />
-        <output id="list"></output>
+    <div class="input-group mb-3">
+        <div class="custom-file">
+            <input class="custom-file-input" type="file" id="files" name="files[]" multiple>
+            <label class="custom-file-label" for="files" id="file-name-label">Choose file</label>
+        </div>
     </div>
     <div class="form-group">
-        <label for="categorical-col">Categorical Col</label>
-        <select id="categorical-col">
+        <label class="badge badge-custom p-2" for="categorical-col">Categorical Col</label>
+        <select id="categorical-col" class="col-selection">
             <option value="">-</option>
         </select>
     </div>
     <div class="form-group">
-        <label for="numerical-col">Numerical Col</label>
-        <select id="numerical-col">
+        <label class="badge badge-custom p-2" for="numerical-col">Numerical Col</label>
+        <select id="numerical-col" class="col-selection">
             <option value="">-</option>
         </select>
     </div>
     <div id="thresh">
-        <span class="badge badge-secondary col-md-5 p-2">Bar Chart Threshold</span>
+        <span class="badge badge-custom p-2">Bar Chart Threshold</span>
     </div>
     <div id="wrap">
-        <span class="badge badge-secondary col-md-5 p-2">Wrap Threshold</span>
+        <span class="badge badge-custom p-2">Wrap Threshold</span>
     </div>
     <div class="save">
-        <button id="save" name="save">save chart</button>
+        <button id="save" name="save" type="button" class="btn btn-primary">save chart</button>
     </div>
 </div>
 <div id="chart"></div>
