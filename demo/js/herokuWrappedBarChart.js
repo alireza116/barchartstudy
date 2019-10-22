@@ -11,8 +11,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   var h = $("#chart").height();
 
   var margin = { top: 20, right: 50, bottom: 50, left: 100 },
-    // width = 1000 - margin.left - margin.right,
-    // height = 500 - margin.top - margin.bottom;
     width = w - margin.left - margin.right,
     height = h - margin.top - margin.bottom;
 
@@ -180,10 +178,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
 
       var helpTranslate = ((1 - wrapThresh) * height) / 2;
 
-      // helpAxisRange
-      //     .attr("transform","translate("+(width - 45)+"," + helpTranslate+")")
-      //     .text(parseInt(threshold - (wrapThresh*threshold)));
-
       yAxis.call(d3.axisLeft(y));
 
       xAxis.call(
@@ -194,11 +188,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
             return labels[i];
           })
       );
-
-      // helpAxis.call(
-      //     d3.axisLeft(help).tickValues([wrapThresh*threshold,threshold])
-      // );
-      // Add the Y Axis
 
       lines
         .data(data.lines)
@@ -234,15 +223,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
 
       var helpTranslate = ((1 - wrapThresh) * height) / 2;
 
-      // helpAxisRange
-      //     .attr("transform","translate("+(width - 45)+"," + helpTranslate+")")
-      //     .text(parseInt(threshold - (wrapThresh*threshold)));
-      //
-      // helpAxis.call(
-      //     d3.axisLeft(help).tickValues([wrapThresh*threshold,threshold])
-      // );
-
-      // Add the Y Axis
       yAxis.call(d3.axisLeft(y));
 
       xAxis.call(
@@ -283,8 +263,10 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   function prepareData(values, thresh, wrapThresh) {
     var level = 1;
     var levels = [];
-    var wrapGap = 0.75;
+    var wrapGap = 0.5;
     var inside = true;
+    var levelStep = 2;
+    var wrapGapAdjust = 0;
     // var yAdjust = threshold - y.invert(strokeWidth*2);
     //ISAAC CAN YOU CHECK THIS PART?
 
@@ -294,7 +276,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
       if (d <= thresh) {
         var p = [{ Y: 0, X: level }, { Y: d, X: level }];
         levels.push(level);
-        level += 1;
+        level += levelStep;
         // barCount += 1;
         return p;
       } else {
@@ -324,7 +306,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
             }
           } else {
             points.push({ Y: thresh * wrapThresh, X: level });
-            level += wrapGap;
+            level += wrapGap + wrapGapAdjust;
             if (l < numWrap) {
               points.push({ Y: thresh * wrapThresh, X: level });
             } else {
@@ -347,14 +329,14 @@ function wrapBarChart(mValues, mLabels, args, mId) {
           });
         }
 
-        level += 1;
+        level += levelStep;
         return points;
       }
     });
 
     strokeGap = width / level;
-    strokeWidth = strokeGap / 2;
-    xGap = strokeGap / 2;
+    strokeWidth = strokeGap * 0.5;
+    xGap = strokeGap * 0.5;
     var yAdjust = thresh - y.invert(strokeWidth / 2);
 
     // IF YOU WANT TO ADJUST UP SO IT CURVES inside of the chart. Change the + - in the below code. and uncomment the last part. The problem is we will lose accuracy when the
