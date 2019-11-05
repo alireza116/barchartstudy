@@ -93,3 +93,8 @@ body {
 }
 
 /**/
+
+.text-input {
+    display: inline;
+    width: inherit;
+}

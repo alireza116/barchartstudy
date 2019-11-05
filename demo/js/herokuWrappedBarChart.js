@@ -1,14 +1,16 @@
 function wrapBarChart(mValues, mLabels, args, mId) {
   args = args || {};
   mId = mId || { chart: "#chart", thresh: "#thresh", wrap: "#wrap" };
+  let fixedColorSchemeName = "Fixed";
   // set width and height
   // gridlines in y axis function
   function make_y_gridlines() {
     return d3.axisLeft(y).ticks(5);
   }
 
-  var w = $("#chart").width();
-  var h = $("#chart").height();
+  let $chart = $("#chart");
+  let w = $chart.width();
+  let h = $chart.height();
 
   var margin = { top: 20, right: 50, bottom: 50, left: 100 },
     width = w - margin.left - margin.right,
@@ -25,6 +27,8 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   let thresholdSliderStep = args.mThresholdSliderStep || 50;
   let thresholdSliderMin = args.mThresholdSliderMin || 500;
   let thresholdSliderMax = args.mThresholdSliderMax || 10000;
+  let colorSchemeName = args.colorSchemeName? args.colorSchemeName: fixedColorSchemeName;
+  let barColor = args.color || "#006bd6";
 
   let values = mValues || [
     192.07751450525203,
@@ -64,6 +68,13 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     .range([0, height * (1 - wrapThresh)])
     .domain([threshold, wrapThresh * threshold]);
   let x = d3.scaleLinear().range([0, data.level * (strokeWidth + xGap)]);
+  let colorScale;
+
+  console.log("color scheme name", args.colorSchemeName);
+  if (colorSchemeName !== fixedColorSchemeName) {
+    colorScale = d3.scaleOrdinal(d3[colorSchemeName]);
+    colorScale.domain(labels);
+  }
 
   // D3 Line Function
   let valueline = d3
@@ -110,9 +121,9 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     .attr("class", "lines")
     .attr("stroke-width", strokeWidth)
     .attr("stroke", function(d, i) {
-      //            console.log(color(values[i]));
-      //            return color(values[i])
-      return "#E42644";
+      if (colorSchemeName === 'Fixed')
+        return barColor;
+      return colorScale(values[i]);
     })
     .attr("d", valueline);
 
@@ -193,7 +204,11 @@ function wrapBarChart(mValues, mLabels, args, mId) {
         .data(data.lines)
         .attr("d", valueline)
         .attr("stroke-width", strokeWidth)
-        .attr("stroke", "#E42644");
+        .attr("stroke", (d, i) => {
+          if (colorSchemeName === 'Fixed')
+            return barColor;
+          return colorScale(values[i]);
+        });
     });
 
   var sliderSimple2 = d3
@@ -335,8 +350,8 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     });
 
     strokeGap = width / level;
-    strokeWidth = strokeGap * 0.5;
-    xGap = strokeGap * 0.5;
+    strokeWidth = strokeGap * 0.6;
+    xGap = strokeGap * 0.9;
     var yAdjust = thresh - y.invert(strokeWidth / 2);
 
     // IF YOU WANT TO ADJUST UP SO IT CURVES inside of the chart. Change the + - in the below code. and uncomment the last part. The problem is we will lose accuracy when the

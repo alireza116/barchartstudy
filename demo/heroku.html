@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>wrapped</title>
-    <script src="js/d3.v5.min.js"></script>
-    <script src="js/d3-simple-slider.js"></script>
-    <script src="js/lodash.core.min-4.17.15.js"></script>
+    <script src="js/libs/d3.v5.min.js"></script>
+    <script src="js/libs/d3-simple-slider.js"></script>
+    <script src="js/libs/lodash.core.min-4.17.15.js"></script>
     <script src="js/herokuWrappedBarChart.js"></script>
-    <script src="js/saveSvgAsPng.js"></script>
+    <script src="js/libs/saveSvgAsPng.js"></script>
     <script src="js/base.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/listeners.js"></script>
     <script  src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
+    <script src="js/libs/jscolor.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet"
             href="css/bootstrap.min.css-4.1.3.css"
@@ -52,13 +55,29 @@
     <div id="wrap">
         <span class="badge badge-custom p-2">Wrap Threshold</span>
     </div>
+    <div class="form-group">
+        <label class="badge badge-custom p-2" for="color-scheme-selection">Color Selection</label>
+        <select id="color-scheme-selection" class="col-selection">
+        </select>
+    </div>
+    <div class="form-group" id="color-code-section">
+        <label class="badge badge-custom p-2" for="color-code-dummy">Color</label>
+        <input class="form-control text-input jscolor" onchange="updateColorCode(this.jscolor)" id="color-code-dummy" value="006bd6">
+        <input id="color-code" value="#006bd6" hidden>
+    </div>
+
     <div class="save">
         <button id="save" name="save" type="button" class="btn btn-primary">save chart</button>
     </div>
 </div>
 <div id="chart"></div>
 <script>
-    window.onload = function () { init(); }
+    window.onload = function () {init()};
+    function updateColorCode(colorCode) {
+        let colorCodeEl = document.getElementById("color-code");
+        colorCodeEl.value = "#"+colorCode;
+        colorCodeEl.dispatchEvent(new Event('change'));
+    }
 </script>
 </body>
 </html>
