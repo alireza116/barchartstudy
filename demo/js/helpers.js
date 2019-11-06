@@ -3,6 +3,7 @@
  * @overview :: utility functions for event listeners
  */
 
+let mDataFileName = "";
 let mData = null;
 let mColumns = null;
 let selected_categorical_col = null;
@@ -134,4 +135,29 @@ let clearChartDiv = function() {
         '<span class="badge badge-custom p-2">Bar Chart Threshold</span>';
     document.getElementById("wrap").innerHTML =
         '<span class="badge badge-custom p-2">Wrap Threshold</span>';
+};
+
+let getSaveFileName = function() {
+    let currentTimeStamp = new Date().getTime();
+    let fileName = "chart-";
+    if (mDataFileName !== "") {
+        let fileNameParts = mDataFileName.split('.');
+        fileNameParts.pop(-1);
+        fileName = fileNameParts.join("") + "-";
+    }
+    return fileName + currentTimeStamp;
+};
+
+let saveSvg = function(svgEl, name) {
+    svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    let svgData = svgEl.outerHTML;
+    let preface = '<?xml version="1.0" standalone="no"?>\r\n';
+    let svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+    let svgUrl = URL.createObjectURL(svgBlob);
+    let downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = name;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
 };

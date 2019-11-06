@@ -9,6 +9,7 @@ function initListeners() {
         "change",
         function(e) {
             let file = document.querySelector("input[id=files]").files[0];
+            mDataFileName = file.name;
             reader.addEventListener("load", loadCSVFile, false);
             if (file) {
                 reader.readAsText(file);
@@ -59,9 +60,14 @@ function initListeners() {
         wrapBarChart(chartValues, chartLabels, wrappedBarChartArgs);
     });
 
-    let saveButton = document.getElementById("save");
+    let saveButton = document.getElementById("save-png");
     saveButton.addEventListener("click", function(e) {
         e.preventDefault();
-        saveSvgAsPng(document.querySelector("#chart-svg"), "chart.png");
+        saveSvgAsPng(document.querySelector("#chart-svg"), getSaveFileName()+".png");
+    });
+
+    let saveSVGButton = document.getElementById('save-svg');
+    saveSVGButton.addEventListener("click", function (e) {
+        saveSvg(document.getElementById("chart-svg"), getSaveFileName()+".svg");
     });
 }
