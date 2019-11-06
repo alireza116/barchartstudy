@@ -52,6 +52,13 @@ function initListeners() {
         switchToFixedBarChartColor();
     });
 
+    let sortingElement = document.getElementById("sorting");
+    sortingElement.addEventListener("change", function (e) {
+        wrappedBarChartArgs.sort = sortingElement.value;
+        clearChartDiv();
+        wrapBarChart(chartValues, chartLabels, wrappedBarChartArgs);
+    });
+
     let saveButton = document.getElementById("save");
     saveButton.addEventListener("click", function(e) {
         e.preventDefault();

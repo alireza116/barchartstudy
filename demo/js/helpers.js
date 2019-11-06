@@ -11,7 +11,16 @@ let chartValues = null;
 let chartLabels = null;
 let wrappedBarChartArgs = {
     colorSchemeName: "Fixed",
-    color: "#006bd6"
+    color: "#006bd6",
+    sort: null,
+    mThreshold: 1500,
+    mWrapThresh: 0,
+    onThresholdChange: function(thresh) {
+        wrappedBarChartArgs.mThreshold = thresh;
+    },
+    onWrapThresholdChange: function(wrapThresh) {
+        wrappedBarChartArgs.mWrapThresh = wrapThresh;
+    },
 };
 let reader = new FileReader();
 
@@ -19,9 +28,10 @@ let refreshWrappedBarChart = function(colorSchemeName) {
     colorSchemeName = colorSchemeName || null;
     if (
         selected_numerical_col &&
-        selected_numerical_col &&
+        selected_categorical_col &&
         _.indexOf(mColumns, selected_numerical_col) !== -1 &&
-        _.indexOf(mColumns, selected_numerical_col) !== -1
+        _.indexOf(mColumns, selected_numerical_col) !== -1 &&
+        selected_numerical_col !== selected_categorical_col
     ) {
         chartValues = _.map(mData, selected_numerical_col);
         chartLabels = _.map(mData, selected_categorical_col);
@@ -38,13 +48,14 @@ let refreshWrappedBarChart = function(colorSchemeName) {
                 return parseFloat(d);
             })
         );
-        wrappedBarChartArgs = {
-            mThresholdSliderMin: minValue,
-            mThresholdSliderMax: maxValue,
-            mThreshold: d3.quantile(chartValues, 1),
-            mThresholdSliderStep: ((maxValue - minValue) * 2) / 100,
-            colorSchemeName: colorSchemeName
-        };
+
+        wrappedBarChartArgs.mThresholdSliderMin = minValue;
+        wrappedBarChartArgs.mThresholdSliderMax = maxValue;
+        wrappedBarChartArgs.mThreshold = d3.quantile(chartValues, 1);
+        wrappedBarChartArgs.mWrapThresh = 0;
+        wrappedBarChartArgs.mThresholdSliderStep = ((maxValue - minValue) * 2) / 100;
+        wrappedBarChartArgs.colorSchemeName = colorSchemeName;
+
         wrapBarChart(chartValues, chartLabels, wrappedBarChartArgs);
     }
 };
@@ -78,6 +89,9 @@ let loadCSVFile = function() {
             categorical_col.appendChild(categorical_option);
             numerical_col.appendChild(numerical_option);
         });
+
+        categorical_col.dispatchEvent(new Event('change'));
+        numerical_col.dispatchEvent(new Event('change'));
     }
 };
 

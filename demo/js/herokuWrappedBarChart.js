@@ -59,6 +59,35 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   ];
   let labels = mLabels || "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
 
+  if (args.sort) {
+    /*
+     * if sorting parameter passed in argument
+     */
+    let valueMap = {};
+    values.forEach(function (value, index) {
+      if (valueMap.hasOwnProperty(value))
+        valueMap[value].push(labels[index]);
+      else
+        valueMap[value] = [labels[index]];
+    });
+
+    let sorted_values = values.sort(function (a, b) {
+      if (args.sort === "asc")
+        return a-b;
+      else if (args.sort === "desc")
+        return b-a;
+      return null;
+    });
+
+    let sorted_labels = [];
+    sorted_values.forEach(function (value) {
+      sorted_labels.push(valueMap[value].pop());
+    });
+
+    values = sorted_values;
+    labels = sorted_labels;
+  }
+
   let y = d3.scaleLinear().range([height, 0]);
   y.domain([0, threshold]);
 
@@ -70,7 +99,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   let x = d3.scaleLinear().range([0, data.level * (strokeWidth + xGap)]);
   let colorScale;
 
-  console.log("color scheme name", args.colorSchemeName);
   if (colorSchemeName !== fixedColorSchemeName) {
     colorScale = d3.scaleOrdinal(d3[colorSchemeName]);
     colorScale.domain(labels);
@@ -174,6 +202,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     .default(threshold)
     .on("onchange", function(val) {
       threshold = val;
+      if (args.onThresholdChange) args.onThresholdChange(val);
       y.domain([0, threshold]);
       var data = prepareData(values, threshold, wrapThresh);
       //            strokeGap = width/data.level;
@@ -222,7 +251,9 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     .default(wrapThresh)
     .on("onchange", function(val) {
       wrapThresh = val;
-      var data = prepareData(values, threshold, wrapThresh);
+      if (args.onWrapThresholdChange) args.onWrapThresholdChange(val);
+
+      let data = prepareData(values, threshold, wrapThresh);
       //            strokeGap = width/data.level;
       //            strokeWidth = strokeGap/5*2;
       //            xGap =  strokeGap/5*3;
@@ -276,12 +307,12 @@ function wrapBarChart(mValues, mLabels, args, mId) {
   gSimple2.call(sliderSimple2);
 
   function prepareData(values, thresh, wrapThresh) {
-    var level = 1;
-    var levels = [];
-    var wrapGap = 0.5;
-    var inside = true;
-    var levelStep = 2;
-    var wrapGapAdjust = 0;
+    let level = 1;
+    let levels = [];
+    let wrapGap = 0.6;
+    let inside = true;
+    let levelStep = 2;
+    let wrapGapAdjust = 0;
     // var yAdjust = threshold - y.invert(strokeWidth*2);
     //ISAAC CAN YOU CHECK THIS PART?
 
@@ -350,8 +381,8 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     });
 
     strokeGap = width / level;
-    strokeWidth = strokeGap * 0.6;
-    xGap = strokeGap * 0.9;
+    strokeWidth = strokeGap * 0.5;
+    xGap = strokeGap * 0.5;
     var yAdjust = thresh - y.invert(strokeWidth / 2);
 
     // IF YOU WANT TO ADJUST UP SO IT CURVES inside of the chart. Change the + - in the below code. and uncomment the last part. The problem is we will lose accuracy when the
@@ -361,7 +392,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     }
     data.forEach(function(line) {
       if (line.length > 2) {
-        console.log(line);
+        // console.log(line);
         line.forEach(function(point, i) {
           if (i > 0 && i < line.length - 1) {
             if (i % 4 === 1 || i % 4 === 2) {
@@ -383,7 +414,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
             }
           }
         });
-        console.log(line);
+        // console.log(line);
       }
     });
 

@@ -1,5 +1,5 @@
 function init() {
   loadColorOptions();
-  wrapBarChart();
+  wrapBarChart(null, null, wrappedBarChartArgs, null);
   initListeners();
 }
