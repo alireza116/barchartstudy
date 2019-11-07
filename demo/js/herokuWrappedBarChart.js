@@ -70,7 +70,7 @@ function wrapBarChart(mValues, mLabels, args, mId) {
       else
         valueMap[value] = [labels[index]];
     });
-
+    values = [...values];
     let sorted_values = values.sort(function (a, b) {
       if (args.sort === "asc")
         return a-b;
@@ -83,7 +83,6 @@ function wrapBarChart(mValues, mLabels, args, mId) {
     sorted_values.forEach(function (value) {
       sorted_labels.push(valueMap[value].pop());
     });
-
     values = sorted_values;
     labels = sorted_labels;
   }
